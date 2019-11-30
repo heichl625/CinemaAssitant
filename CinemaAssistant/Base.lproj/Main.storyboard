@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="yl2-sM-qoP">
+            <objects>
+                <tabBarController id="49e-Tb-3d3" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
+                        <rect key="frame" x="0.0" y="975" width="768" height="49"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.92156862750000001" green="0.30196078430000001" blue="0.29411764709999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" white="0.071003205339673539" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" red="1" green="0.19607843137254902" blue="0.20392156862745098" alpha="1" colorSpace="calibratedRGB"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="7ui-RH-aVi" kind="relationship" relationship="viewControllers" id="51c-k5-ft6"/>
+                        <segue destination="mDH-fO-TPB" kind="relationship" relationship="viewControllers" id="w3e-13-nzp"/>
+                        <segue destination="sWD-Ng-kUk" kind="relationship" relationship="viewControllers" id="PzN-JT-qOA"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="0.0" y="0.0"/>
+        </scene>
+        <!--Movies-->
+        <scene sceneID="1JQ-7Q-TmJ">
+            <objects>
+                <tableViewController id="mDH-fO-TPB" customClass="MovieTableViewController" customModule="CinemaAssistant" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="pyQ-rr-1Mg">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="separatorColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="sfK-tT-tsD">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sfK-tT-tsD" id="WwE-5w-3qx">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="mDH-fO-TPB" id="b72-j8-vc9"/>
+                            <outlet property="delegate" destination="mDH-fO-TPB" id="MLX-Er-gTV"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Movies" image="film.fill" catalog="system" id="h0v-XQ-nZY"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q1v-Ma-CV0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="977" y="0.0"/>
+        </scene>
+        <!--Me-->
+        <scene sceneID="GWQ-7b-hqX">
+            <objects>
+                <viewController id="sWD-Ng-kUk" customClass="MeViewController" customModule="CinemaAssistant" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0Jt-NA-LPi">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="gzZ-l5-zxf"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Me" image="person.fill" catalog="system" id="gI0-AB-IQk"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sAc-rg-m09" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1006" y="695"/>
+        </scene>
+        <!--Cinema-->
+        <scene sceneID="ZR1-ea-CKe">
+            <objects>
+                <tableViewController id="Jpa-cY-B2D" customClass="CinemaTableViewController" customModule="CinemaAssistant" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ecj-pI-Rnk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" red="0.92156862745098034" green="0.30196078431372547" blue="0.29411764705882354" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaCell" rowHeight="141" id="a4l-xo-Vaq">
+                                <rect key="frame" x="0.0" y="28" width="414" height="141"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="a4l-xo-Vaq" id="L9T-c7-lUb">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="141"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="103" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wF1-yh-fri">
+                                            <rect key="frame" x="254" y="0.0" width="160" height="141"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="160" id="6kB-lI-ZM5"/>
+                                                <constraint firstAttribute="height" constant="140" id="PTY-iv-e3K"/>
+                                            </constraints>
+                                        </imageView>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a35-5d-91e">
+                                            <rect key="frame" x="0.0" y="0.0" width="254" height="141"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cinema Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yc9-9M-3Xy">
+                                                    <rect key="frame" x="10" y="40" width="234" height="25.666666666666671"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.1947589797" blue="0.20430140590000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s9b-gS-29D">
+                                                    <rect key="frame" x="10" y="75.666666666666671" width="234" height="18"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Regular" family="Kohinoor Gujarati" pointSize="12"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="s9b-gS-29D" firstAttribute="leading" secondItem="a35-5d-91e" secondAttribute="leading" constant="10" id="0MW-JT-9bc"/>
+                                                <constraint firstItem="s9b-gS-29D" firstAttribute="top" secondItem="yc9-9M-3Xy" secondAttribute="bottom" constant="10" id="A9J-2G-P8L"/>
+                                                <constraint firstItem="yc9-9M-3Xy" firstAttribute="top" secondItem="a35-5d-91e" secondAttribute="top" constant="40" id="FSd-IL-YxV"/>
+                                                <constraint firstAttribute="trailing" secondItem="s9b-gS-29D" secondAttribute="trailing" constant="10" id="SWl-AR-sMs"/>
+                                                <constraint firstItem="yc9-9M-3Xy" firstAttribute="leading" secondItem="a35-5d-91e" secondAttribute="leading" constant="10" id="hYe-u9-Sh3"/>
+                                                <constraint firstAttribute="trailing" secondItem="yc9-9M-3Xy" secondAttribute="trailing" constant="10" id="o2B-Gk-Sew"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="wF1-yh-fri" firstAttribute="leading" secondItem="a35-5d-91e" secondAttribute="trailing" id="5yf-yn-Ac9"/>
+                                        <constraint firstItem="a35-5d-91e" firstAttribute="leading" secondItem="L9T-c7-lUb" secondAttribute="leading" id="6dF-FR-30R"/>
+                                        <constraint firstAttribute="bottom" secondItem="a35-5d-91e" secondAttribute="bottom" id="LiJ-Dj-fW1"/>
+                                        <constraint firstItem="wF1-yh-fri" firstAttribute="top" secondItem="L9T-c7-lUb" secondAttribute="top" id="MHm-Dr-pZk"/>
+                                        <constraint firstAttribute="trailing" secondItem="wF1-yh-fri" secondAttribute="trailing" id="NxJ-as-Wuh"/>
+                                        <constraint firstItem="a35-5d-91e" firstAttribute="top" secondItem="L9T-c7-lUb" secondAttribute="top" id="Pev-g2-tja"/>
+                                        <constraint firstItem="wF1-yh-fri" firstAttribute="leading" secondItem="a35-5d-91e" secondAttribute="trailing" id="aSs-FS-Gy6"/>
+                                        <constraint firstAttribute="bottom" secondItem="wF1-yh-fri" secondAttribute="bottom" id="qb2-bm-6A7"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <segue destination="9Ls-CG-30Q" kind="show" identifier="showCinemaDetail" id="klk-GM-lCQ"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Jpa-cY-B2D" id="R5R-sD-EOU"/>
+                            <outlet property="delegate" destination="Jpa-cY-B2D" id="PKW-gY-6D7"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Cinema" id="3Kx-c8-C1X"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ttF-Lf-cig" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1884.057971014493" y="-680.70652173913049"/>
+        </scene>
+        <!--Cinema Detail Table View Controller-->
+        <scene sceneID="IWN-ee-H1W">
+            <objects>
+                <tableViewController id="9Ls-CG-30Q" customClass="CinemaDetailTableViewController" customModule="CinemaAssistant" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="WIp-Dp-oEa">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="separatorColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <sections>
+                            <tableViewSection id="laZ-Hr-YQx">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaImg" rowHeight="244" id="9vZ-Zu-u2U">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="244"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9vZ-Zu-u2U" id="aXT-oc-pt0">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="244"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RWB-eJ-FPe">
+                                                    <rect key="frame" x="0.0" y="10" width="414" height="224"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="RWB-eJ-FPe" firstAttribute="leading" secondItem="aXT-oc-pt0" secondAttribute="leading" id="HrB-3N-K3o"/>
+                                                <constraint firstAttribute="bottom" secondItem="RWB-eJ-FPe" secondAttribute="bottom" constant="10" id="Xfp-Tk-mam"/>
+                                                <constraint firstItem="RWB-eJ-FPe" firstAttribute="top" secondItem="aXT-oc-pt0" secondAttribute="top" constant="10" id="Ygh-hB-fAg"/>
+                                                <constraint firstAttribute="trailing" secondItem="RWB-eJ-FPe" secondAttribute="trailing" id="wDj-FQ-rQc"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaNoOfHouses" id="2Sf-1i-i09">
+                                        <rect key="frame" x="0.0" y="272" width="414" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2Sf-1i-i09" id="q3W-hY-ADy">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="戲院資料" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Em-Qf-4hh">
+                                                    <rect key="frame" x="165" y="11" width="85" height="48"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="20"/>
+                                                    <color key="textColor" red="1" green="0.1947589797" blue="0.20430140590000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="9Em-Qf-4hh" firstAttribute="centerY" secondItem="q3W-hY-ADy" secondAttribute="centerY" id="i3O-BC-KYe"/>
+                                                <constraint firstItem="9Em-Qf-4hh" firstAttribute="centerX" secondItem="q3W-hY-ADy" secondAttribute="centerX" id="rQ9-hH-AAy"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaAddress" rowHeight="70" id="oBf-5A-bfu">
+                                        <rect key="frame" x="0.0" y="342" width="414" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oBf-5A-bfu" id="TWo-W8-7eY">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J4D-De-VY1">
+                                                    <rect key="frame" x="89" y="5" width="315" height="60"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Regular" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="地址：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mg3-Lq-2lu">
+                                                    <rect key="frame" x="30" y="22.333333333333329" width="54" height="25.666666666666671"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="54" id="sDQ-Gh-zJv"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.1947589797" blue="0.20430140590000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="J4D-De-VY1" secondAttribute="trailing" constant="10" id="HjZ-oC-QfS"/>
+                                                <constraint firstItem="J4D-De-VY1" firstAttribute="centerY" secondItem="Mg3-Lq-2lu" secondAttribute="centerY" id="IiH-GH-iQa"/>
+                                                <constraint firstItem="Mg3-Lq-2lu" firstAttribute="leading" secondItem="TWo-W8-7eY" secondAttribute="leadingMargin" constant="10" id="R2l-e9-90r"/>
+                                                <constraint firstItem="J4D-De-VY1" firstAttribute="top" secondItem="TWo-W8-7eY" secondAttribute="top" constant="5" id="ggJ-Tw-h5f"/>
+                                                <constraint firstItem="J4D-De-VY1" firstAttribute="leading" secondItem="Mg3-Lq-2lu" secondAttribute="trailing" constant="5" id="mz9-wE-2kE"/>
+                                                <constraint firstAttribute="bottom" secondItem="J4D-De-VY1" secondAttribute="bottom" constant="5" id="ynV-BZ-vOb"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <segue destination="P3C-cV-mhO" kind="show" identifier="showMap" id="ApI-gN-7wd"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaTel" id="Ms9-UT-4xq">
+                                        <rect key="frame" x="0.0" y="412" width="414" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ms9-UT-4xq" id="Lgg-9H-0wM">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="電話：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rbp-OY-1Zn">
+                                                    <rect key="frame" x="30" y="11" width="54" height="48"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="54" id="82O-Wm-vhK"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.1947589797" blue="0.20430140590000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Tel: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mY1-cd-beO">
+                                                    <rect key="frame" x="89" y="25" width="315" height="21"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Regular" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Rbp-OY-1Zn" firstAttribute="leading" secondItem="Lgg-9H-0wM" secondAttribute="leadingMargin" constant="10" id="3dC-Vn-9rI"/>
+                                                <constraint firstItem="mY1-cd-beO" firstAttribute="trailing" secondItem="Lgg-9H-0wM" secondAttribute="trailingMargin" constant="10" id="GY1-Ph-Chg"/>
+                                                <constraint firstItem="mY1-cd-beO" firstAttribute="leading" secondItem="Rbp-OY-1Zn" secondAttribute="trailing" constant="5" id="MU2-ep-Rfi"/>
+                                                <constraint firstItem="mY1-cd-beO" firstAttribute="centerY" secondItem="Rbp-OY-1Zn" secondAttribute="centerY" id="vkM-k3-eSK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaDistrict" id="rDT-Ze-F73">
+                                        <rect key="frame" x="0.0" y="482" width="414" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rDT-Ze-F73" id="55Y-mF-ygd">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dsitrict: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MlV-RT-KRu">
+                                                    <rect key="frame" x="89" y="25" width="295" height="21"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Regular" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="地區：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJ8-qb-dRG">
+                                                    <rect key="frame" x="30" y="11" width="54" height="48"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="54" id="usI-F0-HOj"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.1947589797" blue="0.20430140590000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="MlV-RT-KRu" firstAttribute="centerY" secondItem="XJ8-qb-dRG" secondAttribute="centerY" id="Z3c-aY-jji"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="MlV-RT-KRu" secondAttribute="trailing" constant="10" id="kvO-8s-hyX"/>
+                                                <constraint firstItem="XJ8-qb-dRG" firstAttribute="leading" secondItem="55Y-mF-ygd" secondAttribute="leadingMargin" constant="10" id="kxi-eJ-6ku"/>
+                                                <constraint firstItem="MlV-RT-KRu" firstAttribute="leading" secondItem="XJ8-qb-dRG" secondAttribute="trailing" constant="5" id="qRM-PC-nxJ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cinemaNoOfHouses" id="qKe-6I-xOb">
+                                        <rect key="frame" x="0.0" y="552" width="414" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qKe-6I-xOb" id="3CT-YU-VO4">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Number of Houses:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Xf-hV-l7F">
+                                                    <rect key="frame" x="120" y="25" width="146" height="21"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Regular" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="影院數目：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eTv-Bd-LLp">
+                                                    <rect key="frame" x="30" y="11" width="85" height="48"/>
+                                                    <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.1947589797" blue="0.20430140590000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="2Xf-hV-l7F" firstAttribute="leading" secondItem="eTv-Bd-LLp" secondAttribute="trailing" constant="5" id="8AM-TB-GIc"/>
+                                                <constraint firstItem="eTv-Bd-LLp" firstAttribute="leading" secondItem="3CT-YU-VO4" secondAttribute="leadingMargin" constant="10" id="FQi-T8-IRT"/>
+                                                <constraint firstItem="2Xf-hV-l7F" firstAttribute="centerY" secondItem="eTv-Bd-LLp" secondAttribute="centerY" id="bFK-hC-tLJ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <segue destination="pee-Ab-1Du" kind="show" identifier="showHousesSelection" id="oA9-TV-cjn"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="9Ls-CG-30Q" id="j4j-e4-f1h"/>
+                            <outlet property="delegate" destination="9Ls-CG-30Q" id="7Ev-B2-nPR"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="kix-XZ-aTQ"/>
+                    <connections>
+                        <outlet property="cinemaAddress" destination="J4D-De-VY1" id="Kep-b9-LYV"/>
+                        <outlet property="cinemaDistrict" destination="MlV-RT-KRu" id="FMc-va-p6f"/>
+                        <outlet property="cinemaImg" destination="RWB-eJ-FPe" id="yh3-f9-41g"/>
+                        <outlet property="cinemaNoOfHousees" destination="2Xf-hV-l7F" id="Dey-TB-hX0"/>
+                        <outlet property="cinemaTel" destination="mY1-cd-beO" id="zum-Kh-nbr"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zfn-mQ-aCI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2852.1739130434785" y="-691.304347826087"/>
+        </scene>
+        <!--Cinema Map View Controller-->
+        <scene sceneID="ScO-T8-tDf">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UH1-BF-aeR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController id="P3C-cV-mhO" customClass="CinemaMapViewController" customModule="CinemaAssistant" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zKI-y2-tML">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="GGY-FS-WdS">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="GGY-FS-WdS" firstAttribute="trailing" secondItem="hLq-ll-2hQ" secondAttribute="trailing" id="5BN-eh-QuU"/>
+                            <constraint firstAttribute="bottom" secondItem="GGY-FS-WdS" secondAttribute="bottom" id="LEc-Xa-QiI"/>
+                            <constraint firstItem="GGY-FS-WdS" firstAttribute="leading" secondItem="hLq-ll-2hQ" secondAttribute="leading" id="hM1-79-KZy"/>
+                            <constraint firstItem="GGY-FS-WdS" firstAttribute="top" secondItem="zKI-y2-tML" secondAttribute="top" id="sRq-WQ-qKT"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="hLq-ll-2hQ"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="i5o-cu-B8O"/>
+                    <connections>
+                        <outlet property="map" destination="GGY-FS-WdS" id="j2Y-rG-yBb"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="3931.884057971015" y="-920.38043478260875"/>
+        </scene>
+        <!--House Selection Table View Controller-->
+        <scene sceneID="QNi-hs-7Hd">
+            <objects>
+                <tableViewController id="pee-Ab-1Du" customClass="HouseSelectionTableViewController" customModule="CinemaAssistant" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="PsA-Vw-3Ka">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="houseCell" textLabel="Oj7-4l-Loe" style="IBUITableViewCellStyleDefault" id="nd0-LW-aa7">
+                                <rect key="frame" x="0.0" y="28" width="414" height="59.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nd0-LW-aa7" id="uav-F5-5Zk">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="59.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Oj7-4l-Loe">
+                                            <rect key="frame" x="20" y="0.0" width="374" height="59.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="20"/>
+                                            <color key="textColor" red="1" green="0.1960784314" blue="0.20392156859999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.07100320534" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="pee-Ab-1Du" id="0dD-Nh-nxA"/>
+                            <outlet property="delegate" destination="pee-Ab-1Du" id="wg1-ns-hen"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="FMg-yM-1Jp"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AY8-hM-7Se" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3927" y="-258"/>
+        </scene>
+        <!--Cinema-->
+        <scene sceneID="Qea-Bx-CKT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7ui-RH-aVi" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Cinema" image="house.fill" catalog="system" selectedImage="house.fill" id="qaM-XU-K2U"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="urG-Gt-4aJ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="1" green="0.1960784314" blue="0.20392156859999999" alpha="1" colorSpace="calibratedRGB"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Jpa-cY-B2D" kind="relationship" relationship="rootViewController" id="YQ9-aR-9ws"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v7l-yM-kTg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="976.81159420289862" y="-680.70652173913049"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="film.fill" catalog="system" width="64" height="46"/>
+        <image name="house.fill" catalog="system" width="64" height="52"/>
+        <image name="person.fill" catalog="system" width="64" height="60"/>
+    </resources>
+    <color key="tintColor" red="1" green="0.1960784314" blue="0.20392156859999999" alpha="1" colorSpace="calibratedRGB"/>
+</document>
