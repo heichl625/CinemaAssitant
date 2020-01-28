@@ -7,17 +7,22 @@
 //
 
 import UIKit
+import Alamofire
+import FirebaseDatabase
+import FirebaseAnalytics
 
 class CinemaDetailTableViewController: UITableViewController {
 
     var cinemaName: String?
     var image: UIImage?
     var address: String?
-    var noOfHouse: Int?
     var district: String?
     var tel: String?
+    var cinemaID: Int = 0
+    var houseNum = 0
     
     var districtCName: String = ""
+    var ref: DatabaseReference!
     
     @IBOutlet weak var cinemaImg: UIImageView!
     @IBOutlet weak var cinemaAddress: UILabel!
@@ -29,10 +34,23 @@ class CinemaDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ref = Database.database().reference()
         navigationItem.title = cinemaName
+        
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         cinemaImg.image = image
         cinemaAddress.text = address
-        cinemaNoOfHousees.text = "\(noOfHouse!)"
+        
+        getHouseInfo()
+        
+        //cinemaNoOfHousees.text = "\(houseNum)"
         cinemaTel.text = tel
         
         switch(district){
@@ -57,11 +75,6 @@ class CinemaDetailTableViewController: UITableViewController {
         }
         
         cinemaDistrict.text = districtCName
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -77,6 +90,8 @@ class CinemaDetailTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.cellForRow(at: indexPath)?.isSelected = false
         
         if indexPath.row == 3 {
             makeCall()
@@ -105,8 +120,9 @@ class CinemaDetailTableViewController: UITableViewController {
             
             if let destinationVC = segue.destination as? HouseSelectionTableViewController {
                 
-                destinationVC.houseCount = self.noOfHouse!
+                destinationVC.houseCount = self.houseNum
                 destinationVC.cinemaName = self.cinemaName!
+                destinationVC.cinemaID = self.cinemaID
                 
             }
             
@@ -123,6 +139,24 @@ class CinemaDetailTableViewController: UITableViewController {
             
         }
     
+    }
+    
+    func getHouseInfo(){
+        
+        ref.child("cinema").child("\(cinemaID)").child("house").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            let value = snapshot.value as? NSArray
+            
+            if let unwrappedValue = value{
+            
+                self.houseNum = unwrappedValue.count - 1
+                self.cinemaNoOfHousees.text = "\(self.houseNum)"
+            }
+            
+        }){ (error) in
+            print(error.localizedDescription)
+        }
+        
     }
 
     

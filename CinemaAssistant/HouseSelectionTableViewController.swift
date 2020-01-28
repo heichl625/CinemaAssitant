@@ -7,15 +7,26 @@
 //
 
 import UIKit
+import FirebaseDatabase
+import FirebaseAnalytics
 
 class HouseSelectionTableViewController: UITableViewController {
     
     var houseCount: Int = 0
+    var cinemaID: Int = 0
     var cinemaName: String = ""
+    var houseName: [String] = []
+    
+    var ref: DatabaseReference!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        ref = Database.database().reference()
+        
+        if cinemaID != 0{
+            getHouseName()
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -32,7 +43,7 @@ class HouseSelectionTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return houseCount
+        return Int(houseCount)
     }
 
     
@@ -40,11 +51,37 @@ class HouseSelectionTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "houseCell", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = "House \(indexPath.row+1)"
+        if houseName.count > 0{
+            cell.textLabel?.text = "\(houseName[indexPath.row])"
+        }
 
         return cell
     }
     
+    func getHouseName(){
+        
+        ref.child("cinema").child("\(cinemaID)").child("house").observeSingleEvent(of: .value, with: { snapshot in
+            
+            let value = snapshot.value as? NSArray
+            
+            if let unwrappedValue = value{
+                
+                for n in 1...unwrappedValue.count-1{
+                    
+                    self.houseName.append(unwrappedValue[n] as! String)
+                    
+                }
+               
+            }
+            
+            self.tableView.reloadData()
+            
+        }){ (error) in
+            print(error.localizedDescription)
+        }
+        
+        
+    }
 
     /*
     // Override to support conditional editing of the table view.

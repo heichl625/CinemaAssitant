@@ -19,18 +19,18 @@
 	<key>STORAGE_BUCKET</key>
 	<string>cinemaassistant-f78d1.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:429513832988:ios:7cca1fbe9ca5aeeb61fdd9</string>
 	<key>DATABASE_URL</key>
-	<string>https://cinemaassistant-f78d1.firebaseio.com</string>
+	<string>https://cinemaassistant-f78d1.firebaseio.com/</string>
 </dict>
 </plist>

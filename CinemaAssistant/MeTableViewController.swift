@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Alamofire
+import FirebaseAuth
 
 class MeTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkLogin()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -19,17 +22,52 @@ class MeTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        tableView.reloadData()
+        checkLogin()
+
+    }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath == IndexPath(row: 0, section: 0){
+            
+            if Auth.auth().currentUser != nil {
+                try! Auth.auth().signOut()
+                self.tableView.reloadData()
+            }else{
+                performSegue(withIdentifier: "showLogin", sender: self)
+            }
+            
+        }
+    
+    }
+    
+    func checkLogin(){
+        
+       Auth.auth().addStateDidChangeListener { (auth, user) in
+            if user != nil {
+                // user is signed in
+                self.tableView.cellForRow(at: IndexPath(row: 0, section: 0))?.textLabel!.text = "Logout"
+            } else {
+                 // user is not signed in
+                self.tableView.cellForRow(at: IndexPath(row: 0, section: 0))?.textLabel!.text = "Login"
+            }
+        }
     }
 
     /*

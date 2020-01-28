@@ -11,11 +11,10 @@ import RealmSwift
 
 class Cinema: Object {
     
+    @objc dynamic var id: Int = 0
     @objc dynamic var cinemaName: String? = nil
     @objc dynamic var address: String? = nil
     @objc dynamic var district: String? = nil
-    @objc dynamic var imageURL: String? = nil
-    var noOfHouses = RealmOptional<Int>()
     @objc dynamic var tel: String? = nil
     
 }

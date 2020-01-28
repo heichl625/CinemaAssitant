@@ -9,6 +9,7 @@ target 'CinemaAssistant' do
   pod "RealmSwift"
   pod "SwiftyJSON"
   pod "Alamofire"
-  
-
+  pod "Firebase"
+  pod "Firebase/Auth"
+  pod "Firebase/Database"
 end
