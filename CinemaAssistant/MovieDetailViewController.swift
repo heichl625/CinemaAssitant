@@ -153,6 +153,7 @@ class MovieDetailViewController: UIViewController {
                 }
                     //print("cast: \(self.castStr)")
                 self.actor.text = "Actor: \(self.castStr)"
+                print("Actor: \(self.castStr)")
                 
             }
             
@@ -167,6 +168,7 @@ class MovieDetailViewController: UIViewController {
                 }
                 //print("crew: \(self.crewStr)")
                 self.director.text = "Director: \(self.crewStr)"
+                print("Director: \(self.crewStr)")
             }
             
         }
