@@ -34,9 +34,9 @@ class CinemaTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        
-//    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        
+    //    }
     
     // MARK: - Table view data source
     
@@ -118,6 +118,7 @@ class CinemaTableViewController: UITableViewController {
                     cinema.cinemaName = value?["cinemaName"] as? String ?? ""
                     cinema.address = value?["address"] as? String ?? ""
                     cinema.district = value?["district"] as? String ?? ""
+                    cinema.cinemaGroup = value?["cinemaGroup"] as? String ?? ""
                     
                     
                     if let url = value?["imgURL"] as? String {
@@ -138,7 +139,7 @@ class CinemaTableViewController: UITableViewController {
                     
                     
                     realm.add(cinema)
-                        //print("realm write")
+                    //print("realm write")
                     
                 }
                 
@@ -168,12 +169,13 @@ class CinemaTableViewController: UITableViewController {
                 let selectedIndex = tableView.indexPathForSelectedRow!
                 
                 if let result = realmResults {
-                destinationVC.cinemaName = result[selectedIndex.row].cinemaName
-                destinationVC.address = result[selectedIndex.row].address
-                destinationVC.district = result[selectedIndex.row].district
-                destinationVC.tel = result[selectedIndex.row].tel
-                destinationVC.cinemaID = result[selectedIndex.row].id
-                destinationVC.image = cinemaImg[result[selectedIndex.row].id-1]
+                    destinationVC.cinemaName = result[selectedIndex.row].cinemaName
+                    destinationVC.address = result[selectedIndex.row].address
+                    destinationVC.district = result[selectedIndex.row].district
+                    destinationVC.tel = result[selectedIndex.row].tel
+                    destinationVC.cinemaID = result[selectedIndex.row].id
+                    destinationVC.image = cinemaImg[result[selectedIndex.row].id-1]
+                    destinationVC.cinemaGroup   = result[selectedIndex.row].cinemaGroup
                 }
                 //destinationVC.image = cinemaImgURL[selectedIndex.row]
                 

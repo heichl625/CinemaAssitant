@@ -23,6 +23,10 @@
 		DD73F4D423BA140000BF64DD /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F4D323BA140000BF64DD /* MovieDetailViewController.swift */; };
 		DD7603BF23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7603BE23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift */; };
 		DD7603C123D0C4A8005F3DA1 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7603C023D0C4A8005F3DA1 /* ARViewController.swift */; };
+		DDAC9E0523F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAC9E0423F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift */; };
+		DDAC9E0723F974C90030EB7C /* SessionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAC9E0623F974C90030EB7C /* SessionTableViewController.swift */; };
+		DDAC9E0923F9774F0030EB7C /* SessionFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAC9E0823F9774F0030EB7C /* SessionFeed.swift */; };
+		DDAC9E0B23F9868D0030EB7C /* SeatPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAC9E0A23F9868D0030EB7C /* SeatPlanViewController.swift */; };
 		DDCB01F6239267B4000BFC78 /* CinemaDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB01F5239267B4000BFC78 /* CinemaDetailTableViewController.swift */; };
 		DDCB01F823927E6A000BFC78 /* HouseSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB01F723927E6A000BFC78 /* HouseSelectionTableViewController.swift */; };
 		DDCB01FA239281B6000BFC78 /* CinemaMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB01F9239281B6000BFC78 /* CinemaMapViewController.swift */; };
@@ -50,6 +54,10 @@
 		DD73F4D323BA140000BF64DD /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		DD7603BE23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMovieTableViewController.swift; sourceTree = "<group>"; };
 		DD7603C023D0C4A8005F3DA1 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
+		DDAC9E0423F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaOnShowMovieTableViewController.swift; sourceTree = "<group>"; };
+		DDAC9E0623F974C90030EB7C /* SessionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTableViewController.swift; sourceTree = "<group>"; };
+		DDAC9E0823F9774F0030EB7C /* SessionFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFeed.swift; sourceTree = "<group>"; };
+		DDAC9E0A23F9868D0030EB7C /* SeatPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatPlanViewController.swift; sourceTree = "<group>"; };
 		DDCB01F5239267B4000BFC78 /* CinemaDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaDetailTableViewController.swift; sourceTree = "<group>"; };
 		DDCB01F723927E6A000BFC78 /* HouseSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseSelectionTableViewController.swift; sourceTree = "<group>"; };
 		DDCB01F9239281B6000BFC78 /* CinemaMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaMapViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +117,9 @@
 				DD028BF323916DFC00D08EDD /* AppDelegate.swift */,
 				DD028BF523916DFC00D08EDD /* SceneDelegate.swift */,
 				DD028BFB23916DFC00D08EDD /* Main.storyboard */,
+				DDAC9E0A23F9868D0030EB7C /* SeatPlanViewController.swift */,
+				DDAC9E0623F974C90030EB7C /* SessionTableViewController.swift */,
+				DDAC9E0423F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift */,
 				DD7603C023D0C4A8005F3DA1 /* ARViewController.swift */,
 				DD7603BE23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift */,
 				DD718E5823BB40A800528B98 /* LoginViewController.swift */,
@@ -122,6 +133,7 @@
 				DDCB01FD2392A2D8000BFC78 /* MovieTableViewController.swift */,
 				DD73F4D323BA140000BF64DD /* MovieDetailViewController.swift */,
 				DD73F4CF23B9F8ED00BF64DD /* MovieFeed.swift */,
+				DDAC9E0823F9774F0030EB7C /* SessionFeed.swift */,
 				DD028BFE23916E0100D08EDD /* Assets.xcassets */,
 				DD028C0023916E0100D08EDD /* LaunchScreen.storyboard */,
 				DD718E5C23BB419100528B98 /* GoogleService-Info.plist */,
@@ -248,11 +260,15 @@
 			files = (
 				DD718E5923BB40A800528B98 /* LoginViewController.swift in Sources */,
 				DD028C1223918CFD00D08EDD /* Cinema.swift in Sources */,
+				DDAC9E0923F9774F0030EB7C /* SessionFeed.swift in Sources */,
 				DDCB01F823927E6A000BFC78 /* HouseSelectionTableViewController.swift in Sources */,
+				DDAC9E0B23F9868D0030EB7C /* SeatPlanViewController.swift in Sources */,
+				DDAC9E0723F974C90030EB7C /* SessionTableViewController.swift in Sources */,
 				DD028BF423916DFC00D08EDD /* AppDelegate.swift in Sources */,
 				DD73F4D023B9F8ED00BF64DD /* MovieFeed.swift in Sources */,
 				DD718E5723BB3E6200528B98 /* MeTableViewController.swift in Sources */,
 				DD028BF623916DFC00D08EDD /* SceneDelegate.swift in Sources */,
+				DDAC9E0523F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift in Sources */,
 				DDCB01FE2392A2D8000BFC78 /* MovieTableViewController.swift in Sources */,
 				DDCB01FA239281B6000BFC78 /* CinemaMapViewController.swift in Sources */,
 				DD7603C123D0C4A8005F3DA1 /* ARViewController.swift in Sources */,

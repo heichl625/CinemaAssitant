@@ -12,4 +12,5 @@ target 'CinemaAssistant' do
   pod "Firebase"
   pod "Firebase/Auth"
   pod "Firebase/Database"
+  pod "SwiftSoup"
 end

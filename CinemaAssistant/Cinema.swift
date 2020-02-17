@@ -16,6 +16,7 @@ class Cinema: Object {
     @objc dynamic var address: String? = nil
     @objc dynamic var district: String? = nil
     @objc dynamic var tel: String? = nil
+    @objc dynamic var cinemaGroup: String? = nil
     
 }
 
