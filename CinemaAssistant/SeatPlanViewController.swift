@@ -19,9 +19,12 @@ class SeatPlanViewController: UIViewController, WKNavigationDelegate {
     var seniorPrice: Int?
     var studentPrice: Int?
     var movieName: String?
+    var cinemaGroup: String?
     
     var cinemaID: String?
     var sessionID: String?
+    
+    var seatPlanURL: URL?
 
     @IBOutlet weak var houseText: UILabel!
     @IBOutlet weak var timeText: UILabel!
@@ -64,8 +67,19 @@ class SeatPlanViewController: UIViewController, WKNavigationDelegate {
         }
         
         webView.navigationDelegate = self
-        let seatPlanURL = URL(string: "https://www.mclcinema.com/SeatPlan.aspx?visLang=2&ci=\(cinemaID!)&si=\(sessionID!)")!
-        webView.load(URLRequest(url: seatPlanURL))
+        
+        switch(cinemaGroup){
+            
+        case "MCL":
+            self.seatPlanURL = URL(string: "https://www.mclcinema.com/SeatPlan.aspx?visLang=2&ci=\(cinemaID!)&si=\(sessionID!)")
+        case "UA":
+            self.seatPlanURL = URL(string: "https://www.uacinemas.com.hk/eng/ticketing/overview?cid=\(cinemaID!)&sid=\(sessionID!)")
+        default:
+            break
+            
+        }
+        
+        webView.load(URLRequest(url: self.seatPlanURL!))
 
     }
 

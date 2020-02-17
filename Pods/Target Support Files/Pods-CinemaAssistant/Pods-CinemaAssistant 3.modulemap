@@ -1,6 +1,0 @@
-framework module Pods_CinemaAssistant {
-  umbrella header "Pods-CinemaAssistant-umbrella.h"
-
-  export *
-  module * { export * }
-}

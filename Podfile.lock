@@ -89,6 +89,7 @@ PODS:
   - Realm/Headers (4.1.1)
   - RealmSwift (4.1.1):
     - Realm (= 4.1.1)
+  - SwiftSoup (2.3.0)
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
@@ -97,6 +98,7 @@ DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Database
   - RealmSwift
+  - SwiftSoup
   - SwiftyJSON
 
 SPEC REPOS:
@@ -120,6 +122,7 @@ SPEC REPOS:
     - nanopb
     - Realm
     - RealmSwift
+    - SwiftSoup
     - SwiftyJSON
 
 SPEC CHECKSUMS:
@@ -142,8 +145,9 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Realm: 25f0a8244cbb1c2271c922963ea8666fc2d8104d
   RealmSwift: 9e2657b33764f80e4a4dffd6d440e24715782052
+  SwiftSoup: d78683f7ea0ae5733225a9e1d3bee5b256449df4
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: cc301aa3a460dd73d2c8adde4931cb4c00ff5953
+PODFILE CHECKSUM: 39f1a27ee590899955f5d7ec37ecac50b85828e8
 
 COCOAPODS: 1.8.4

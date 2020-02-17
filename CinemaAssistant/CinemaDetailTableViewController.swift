@@ -21,6 +21,7 @@ class CinemaDetailTableViewController: UITableViewController {
     var tel: String?
     var cinemaGroup: String?
     var MCLCinemaID: String?
+    var UACinemaID: String?
     var cinemaID: Int = 0
     var houseNum = 0
     var onShowMovieName: [String]?
@@ -52,6 +53,18 @@ class CinemaDetailTableViewController: UITableViewController {
                 
                 
             })
+        }
+        
+        if cinemaGroup == "UA"{
+            
+            ref.child("cinema").child("\(cinemaID)").observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                let value = snapshot.value as? NSDictionary
+                
+                self.UACinemaID = value?["UACinemaID"] as? String ?? ""
+                
+            })
+            
         }
         
         
@@ -170,9 +183,19 @@ class CinemaDetailTableViewController: UITableViewController {
             
             if let destinationVC = segue.destination as? CinemaOnShowMovieTableViewController {
                 
-                if cinemaGroup == "MCL" {
+                destinationVC.cinemaGroup = self.cinemaGroup
+                
+                switch(cinemaGroup){
+                    
+                case "MCL":
                     destinationVC.MCLcinemaID = self.MCLCinemaID
+                case "UA":
+                    destinationVC.UACinemaID = self.UACinemaID
+                default:
+                    break
                 }
+                
+                
                 
                 
             }
