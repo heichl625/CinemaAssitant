@@ -299,7 +299,11 @@ class SessionTableViewController: UITableViewController {
                                                 sessionFeed.movieTime = "\(sessionStrArr2[0]) \(sessionStrArr2[1])"
                                                 print("\(sessionStrArr2[0]) \(sessionStrArr2[1])")
                                                 //get House name
-                                                sessionFeed.movieOnShowHouse = "\(sessionStrArr2[2]) \(sessionStrArr2[3])"
+                                                if sessionStrArr2[3] != "HKD"{
+                                                    sessionFeed.movieOnShowHouse = "\(sessionStrArr2[2]) \(sessionStrArr2[3])"
+                                                }else{
+                                                    sessionFeed.movieOnShowHouse = "\(sessionStrArr2[2])"
+                                                }
                                                 print("\(sessionStrArr2[2]) \(sessionStrArr2[3])")
                                                 //get adult price
                                                 sessionFeed.movieAdultPrice = Int(sessionStrArr2[5]) ?? 0
