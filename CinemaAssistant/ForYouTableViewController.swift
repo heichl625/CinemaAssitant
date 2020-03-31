@@ -11,9 +11,10 @@ import Alamofire
 import Firebase
 import RealmSwift
 import SwiftyJSON
+import BTNavigationDropdownMenu
 
 
-class FavoriteMovieTableViewController: UITableViewController {
+class ForYouTableViewController: UITableViewController {
     
     var ref: DatabaseReference!
     var user: User?
@@ -22,13 +23,14 @@ class FavoriteMovieTableViewController: UITableViewController {
     var moviesID: [String] = []
     var movieTitle: [String] = []
     var realmResults:Results<MovieFeed>?
+    var suggestMovie: [String : String] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ref = Database.database().reference()
         
-        self.title = "Favourite"
+        self.title = "For You"
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -61,7 +63,12 @@ class FavoriteMovieTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return moviesID.count
+        
+        if moviesID.count == 0{
+            return 0
+        }else{
+            return moviesID.count
+        }
     }
     
     //    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -114,9 +121,10 @@ class FavoriteMovieTableViewController: UITableViewController {
                 }
             }
         }
-        
-        
         return cell
+        
+        
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -150,6 +158,7 @@ class FavoriteMovieTableViewController: UITableViewController {
                 
                 self.getMovieInfo()
                 
+                
             })
             
             
@@ -166,7 +175,7 @@ class FavoriteMovieTableViewController: UITableViewController {
             print("All realm deleted")
         }
         
-        for n in 0...self.moviesID.count-1{
+        for n in 0..<self.moviesID.count{
             
             print("Loop count: \(n)")
             
@@ -185,14 +194,20 @@ class FavoriteMovieTableViewController: UITableViewController {
                 movie.poster_path = value?["imgURL"] as? String
                 
                 try! realm.write{
+                    
                     realm.add(movie)
-                    print("movie \(n) added to the realm")
-                    print("realmResult count: \(self.realmResults?.count)")
+                    
+                    //                    print("movie \(movie.id) added to the realm")
+                    //                    print("realmResult count: \(self.realmResults?.count)")
+                    
                     self.tableView.reloadData()
                     
                 }
                 
+                
+                
                 self.realmResults = realm.objects(MovieFeed.self)
+                self.getSuggestionList()
                 
             }){ (error) in
                 print(error.localizedDescription)
@@ -200,6 +215,65 @@ class FavoriteMovieTableViewController: UITableViewController {
             
             
         }
+        
+        
+        
+    }
+    
+    func getSuggestionList(){
+        
+        var suggestionResult: JSON?
+        
+        print("count: \(realmResults?.count)")
+        
+        if let result = realmResults{
+            
+            if result.count > 0{
+                
+                print("inside suggestionList: \(result.count-1)")
+                
+                let url = "https://api.themoviedb.org/3/movie/\(result[result.count-1].id!)/recommendations?api_key=\(api_key)&language=en-US&page=1"
+                
+                Alamofire.request(url).responseJSON{ response in
+                    
+                    print("inside alamofire")
+                    
+                    suggestionResult = JSON(response.result.value)
+                    
+                    print(suggestionResult)
+                    
+                    if suggestionResult!["results"].count > 0{
+                        
+                        for n in 0..<suggestionResult!["results"].count{
+                            
+                            var writeIn = true
+                            
+                            if self.moviesID.count > 0{
+                                for m in 0..<self.moviesID.count{
+                                    
+                                    if self.moviesID[m] == suggestionResult!["results"][n]["id"].stringValue{
+                                        
+                                        writeIn = false
+                                        break
+                                        
+                                    }
+                                    
+                                }
+                            }
+                            
+                            if writeIn {
+                                self.suggestMovie[suggestionResult!["results"][n]["id"].stringValue] = suggestionResult!["results"][n]["title"].stringValue
+                            }
+                            
+                        }
+                        print(self.suggestMovie)
+                    }
+                }
+            }
+        }
+        
+        //Get suggestion movie info
+        //suggestMovie!["results"][n]["poster_path"].stringValue && //suggestionResult!["results"][n]["title"].stringValue
         
     }
     
