@@ -12,6 +12,7 @@ import Alamofire
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseAnalytics
+import YoutubePlayer_in_WKWebView
 
 class MovieDetailViewController: UIViewController {
 
@@ -27,7 +28,7 @@ class MovieDetailViewController: UIViewController {
     var crewStr: String = ""
     var crewArr:[String] = []
     
-    @IBOutlet weak var movieImage: UIImageView!
+    @IBOutlet weak var trailerWKView: WKYTPlayerView!
     @IBOutlet weak var releaseDate: UILabel!
     @IBOutlet weak var overview: UITextView!
     @IBOutlet weak var director: UILabel!
@@ -49,10 +50,10 @@ class MovieDetailViewController: UIViewController {
         
        isFavourite()
         
-        getMovieImageURL()
+        getMovieTrailerURL()
         getMovieCastAndCrew()
-        releaseDate.text = "Release Date： \(releaseDateStr!)"
-        overview.text = "Overview: \n\(overviewStr!)"
+        releaseDate.text = "上映日期： \(releaseDateStr!)"
+        overview.text = "電影簡介: \n\(overviewStr!)"
         
     }
     
@@ -63,117 +64,137 @@ class MovieDetailViewController: UIViewController {
         releaseDate.sizeToFit()
     }
     
-    func getMovieImageURL() {
+    func getMovieTrailerURL() {
         
-        let url = "https://api.themoviedb.org/3/movie/\(id!)/images?api_key=\(key)"
+        var key = ""
         
-        Alamofire.request(url, method: .get).validate().responseJSON {
-            response in
-            
-            switch response.result {
+        let api_URL = "https://api.themoviedb.org/3/movie/\(id!)/videos?api_key=c411a985e4c5562757a616894b03eadb"
+        
+        DispatchQueue.global(qos: .background).async {
+        
+            AF.request(api_URL, method: .get).validate().responseJSON {
+                response in
                 
-            case .success(let value):
-                //print("JSON GET MOVIE IMAGEURL SUCCESS")
-                let jsonResults = JSON(value)
-                self.imageURLStr = "https://image.tmdb.org/t/p/w500\(jsonResults["backdrops"][0]["file_path"])"
-               
-            case .failure(let error):
-                print(error)
+                switch response.result {
+                    
+                case .success(let value):
+                    //print("JSON GET MOVIE IMAGEURL SUCCESS")
+                    let jsonResults = JSON(value)
+                    print(jsonResults["results"][0]["key"].stringValue)
+                    key = jsonResults["results"][0]["key"].stringValue
+                    
+                    DispatchQueue.main.async {
+                        print("Show trailer")
+                        self.trailerWKView.load(withVideoId: key)
+                    }
+                    
+                   
+                case .failure(let error):
+                    print(error)
+                }
             }
-            self.getMovieImage()
+            
         }
+        
+        
+        
     }
     
-    func getMovieImage(){
-        if let unwrappedURL = imageURLStr{
-            Alamofire.request(unwrappedURL).responseData {
-                response in
-                //print("JSON GET MOVIE IMAGE SUCCESS")
-                if let data = response.result.value {
-                    self.movieImage.image = UIImage(data: data, scale:1)
-                }
-                
-            }
-        }
-    }
+//    func getMovieImage(){
+//        if let unwrappedURL = imageURLStr{
+//            AF.request(unwrappedURL).responseData {
+//                response in
+//                //print("JSON GET MOVIE IMAGE SUCCESS")
+//                if let data = response.result.value {
+//                    self.movieImage.image = UIImage(data: data, scale:1)
+//                }
+//
+//            }
+//        }
+//    }
     
     func getMovieCastAndCrew(){
         
         let url = "https://api.themoviedb.org/3/movie/\(id!)/credits?api_key=\(key)"
         
-        Alamofire.request(url, method: .get) .validate().responseJSON {
-            response in
+        DispatchQueue.global(qos: .background).async{
             
-            switch response.result {
+            AF.request(url, method: .get) .validate().responseJSON {
+                response in
                 
-            case .success(let value):
-                
-                //print("JSON GET MOVIE CAST AND CREW SUCCESS")
-                let jsonResults = JSON(value)
-                
-                for n in 0...jsonResults["cast"].count-1{
-                    self.castArr.append(jsonResults["cast"][n]["name"].stringValue)
-                }
-                //print("cast: \(self.castArr)")
-                
-                for n in 0...jsonResults["crew"].count-1{
-                    if jsonResults["crew"][n]["job"].stringValue == "Director" {
-                        self.crewArr.append(jsonResults["crew"][n]["name"].stringValue)
-                    }
-                }
-                //print("crew: \(self.crewArr)")
-            
-            case .failure(let error):
-                print(error)
-                
-            }
-            
-            if self.castArr.count != 0{
-                
-                if self.castArr.count <= 5{
-                    for n in 0...self.castArr.count-1{
-                        
-                        if n != self.castArr.count-1 {
-                            self.castStr += "\(self.castArr[n]), "
-                        }else{
-                            self.castStr += self.castArr[n]
-                        }
-                        
-                    }
-                }else{
-                
-                    for n in 0...5{
-                        
-                        if n != 5 {
-                            self.castStr += "\(self.castArr[n]), "
-                        }else{
-                            self.castStr += self.castArr[n]
-                        }
-                    }
-                }
-                    //print("cast: \(self.castStr)")
-                self.actor.text = "Actor: \(self.castStr)"
-                print("Actor: \(self.castStr)")
-                
-            }
-            
-            if self.crewArr.count != 0{
-                for n in 0...self.crewArr.count-1{
+                switch response.result {
                     
-                    if n != self.crewArr.count-1 {
-                        self.crewStr += "\(self.crewArr[n]), "
+                case .success(let value):
+                    
+                    //print("JSON GET MOVIE CAST AND CREW SUCCESS")
+                    let jsonResults = JSON(value)
+                    
+                    for n in 0...jsonResults["cast"].count-1{
+                        self.castArr.append(jsonResults["cast"][n]["name"].stringValue)
+                    }
+                    //print("cast: \(self.castArr)")
+                    
+                    for n in 0...jsonResults["crew"].count-1{
+                        if jsonResults["crew"][n]["job"].stringValue == "Director" {
+                            self.crewArr.append(jsonResults["crew"][n]["name"].stringValue)
+                        }
+                    }
+                    //print("crew: \(self.crewArr)")
+                
+                case .failure(let error):
+                    print(error)
+                    
+                }
+                
+                if self.castArr.count != 0{
+                    
+                    if self.castArr.count <= 5{
+                        for n in 0...self.castArr.count-1{
+                            
+                            if n != self.castArr.count-1 {
+                                self.castStr += "\(self.castArr[n]), "
+                            }else{
+                                self.castStr += self.castArr[n]
+                            }
+                            
+                        }
                     }else{
-                        self.crewStr += self.crewArr[n]
+                    
+                        for n in 0...5{
+                            
+                            if n != 5 {
+                                self.castStr += "\(self.castArr[n]), "
+                            }else{
+                                self.castStr += self.castArr[n]
+                            }
+                        }
+                    }
+                        //print("cast: \(self.castStr)")
+                    DispatchQueue.main.async{
+                        self.actor.text = "演員: \(self.castStr)"
+                        print("演員: \(self.castStr)")
+                    }
+                    
+                }
+                
+                if self.crewArr.count != 0{
+                    for n in 0...self.crewArr.count-1{
+                        
+                        if n != self.crewArr.count-1 {
+                            self.crewStr += "\(self.crewArr[n]), "
+                        }else{
+                            self.crewStr += self.crewArr[n]
+                        }
+                    }
+                    //print("crew: \(self.crewStr)")
+                    DispatchQueue.main.async{
+                        self.director.text = "導演: \(self.crewStr)"
+                        print("導演: \(self.crewStr)")
                     }
                 }
-                //print("crew: \(self.crewStr)")
-                self.director.text = "Director: \(self.crewStr)"
-                print("Director: \(self.crewStr)")
+                
             }
-            
         }
-        
-        
         
         
     }
@@ -181,13 +202,13 @@ class MovieDetailViewController: UIViewController {
         
         if Auth.auth().currentUser == nil {
             
-            let alertController = UIAlertController(title: "Login", message: "Please Login First.", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            let alertController = UIAlertController(title: "登入", message: "此功能需要先登入。", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "登入", style: .default, handler: { action in
                 
                 self.performSegue(withIdentifier: "showLoginFromMovieDetail", sender: self)
                 
             }))
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: "取消", style: .default, handler: nil))
             self.present(alertController, animated: true)
             
         }else{

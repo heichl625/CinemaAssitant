@@ -7,21 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D353A01110BC099B29339643 /* libPods-CinemaAssistant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C3610D4A6F3505FC8553D0E /* libPods-CinemaAssistant.a */; };
+		B8C88D589932C62A70FDCE14 /* libPods-CinemaAssistant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FA871D20E87245B880D8EC /* libPods-CinemaAssistant.a */; };
 		DD028BF423916DFC00D08EDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD028BF323916DFC00D08EDD /* AppDelegate.swift */; };
 		DD028BF623916DFC00D08EDD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD028BF523916DFC00D08EDD /* SceneDelegate.swift */; };
 		DD028BFD23916DFC00D08EDD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD028BFB23916DFC00D08EDD /* Main.storyboard */; };
 		DD028BFF23916E0100D08EDD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD028BFE23916E0100D08EDD /* Assets.xcassets */; };
 		DD028C0223916E0100D08EDD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD028C0023916E0100D08EDD /* LaunchScreen.storyboard */; };
 		DD028C0A2391721700D08EDD /* CinemaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD028C092391721700D08EDD /* CinemaTableViewController.swift */; };
-		DD028C1223918CFD00D08EDD /* Cinema.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD028C1123918CFD00D08EDD /* Cinema.swift */; };
-		DD718E5723BB3E6200528B98 /* MeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD718E5623BB3E6200528B98 /* MeTableViewController.swift */; };
+		DD265A342446FABA006F3698 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265A332446FABA006F3698 /* PersistenceService.swift */; };
+		DD265A372446FB6C006F3698 /* CinemaAssistant.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DD265A352446FB6C006F3698 /* CinemaAssistant.xcdatamodeld */; };
+		DD265A3E24470675006F3698 /* Cinema+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265A3C24470675006F3698 /* Cinema+CoreDataClass.swift */; };
+		DD265A3F24470675006F3698 /* Cinema+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265A3D24470675006F3698 /* Cinema+CoreDataProperties.swift */; };
+		DD4385212437697700E6F268 /* MeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4385202437697700E6F268 /* MeViewController.swift */; };
 		DD718E5923BB40A800528B98 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD718E5823BB40A800528B98 /* LoginViewController.swift */; };
 		DD718E5B23BB40B700528B98 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD718E5A23BB40B700528B98 /* RegisterViewController.swift */; };
 		DD718E5D23BB419100528B98 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD718E5C23BB419100528B98 /* GoogleService-Info.plist */; };
 		DD73F4D023B9F8ED00BF64DD /* MovieFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F4CF23B9F8ED00BF64DD /* MovieFeed.swift */; };
 		DD73F4D423BA140000BF64DD /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F4D323BA140000BF64DD /* MovieDetailViewController.swift */; };
-		DD7603BF23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7603BE23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift */; };
+		DD7603BF23D020DA005F3DA1 /* ForYouTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7603BE23D020DA005F3DA1 /* ForYouTableViewController.swift */; };
 		DD7603C123D0C4A8005F3DA1 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7603C023D0C4A8005F3DA1 /* ARViewController.swift */; };
 		DDAC9E0523F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAC9E0423F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift */; };
 		DDAC9E0723F974C90030EB7C /* SessionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAC9E0623F974C90030EB7C /* SessionTableViewController.swift */; };
@@ -49,9 +52,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0C3610D4A6F3505FC8553D0E /* libPods-CinemaAssistant.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CinemaAssistant.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		180D2FFFFAAF656C2A0CD1B8 /* Pods-CinemaAssistant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CinemaAssistant.release.xcconfig"; path = "Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant.release.xcconfig"; sourceTree = "<group>"; };
-		8DF7921C46365D007CF20FEA /* Pods-CinemaAssistant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CinemaAssistant.debug.xcconfig"; path = "Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant.debug.xcconfig"; sourceTree = "<group>"; };
+		8A588D336207817FB32E98A7 /* Pods-CinemaAssistant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CinemaAssistant.release.xcconfig"; path = "Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant.release.xcconfig"; sourceTree = "<group>"; };
+		B41893AD8BE56F56E1A65C03 /* Pods-CinemaAssistant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CinemaAssistant.debug.xcconfig"; path = "Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant.debug.xcconfig"; sourceTree = "<group>"; };
+		C9FA871D20E87245B880D8EC /* libPods-CinemaAssistant.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CinemaAssistant.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD028BF023916DFC00D08EDD /* CinemaAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CinemaAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD028BF323916DFC00D08EDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD028BF523916DFC00D08EDD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -60,14 +63,17 @@
 		DD028C0123916E0100D08EDD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD028C0323916E0100D08EDD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD028C092391721700D08EDD /* CinemaTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaTableViewController.swift; sourceTree = "<group>"; };
-		DD028C1123918CFD00D08EDD /* Cinema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cinema.swift; sourceTree = "<group>"; };
-		DD718E5623BB3E6200528B98 /* MeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeTableViewController.swift; sourceTree = "<group>"; };
+		DD265A332446FABA006F3698 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		DD265A362446FB6C006F3698 /* CinemaAssistant.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CinemaAssistant.xcdatamodel; sourceTree = "<group>"; };
+		DD265A3C24470675006F3698 /* Cinema+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cinema+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DD265A3D24470675006F3698 /* Cinema+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cinema+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DD4385202437697700E6F268 /* MeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeViewController.swift; sourceTree = "<group>"; };
 		DD718E5823BB40A800528B98 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		DD718E5A23BB40B700528B98 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		DD718E5C23BB419100528B98 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DD73F4CF23B9F8ED00BF64DD /* MovieFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieFeed.swift; sourceTree = "<group>"; };
 		DD73F4D323BA140000BF64DD /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
-		DD7603BE23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMovieTableViewController.swift; sourceTree = "<group>"; };
+		DD7603BE23D020DA005F3DA1 /* ForYouTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForYouTableViewController.swift; sourceTree = "<group>"; };
 		DD7603C023D0C4A8005F3DA1 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		DDAC9E0423F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaOnShowMovieTableViewController.swift; sourceTree = "<group>"; };
 		DDAC9E0623F974C90030EB7C /* SessionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTableViewController.swift; sourceTree = "<group>"; };
@@ -86,7 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D353A01110BC099B29339643 /* libPods-CinemaAssistant.a in Frameworks */,
+				B8C88D589932C62A70FDCE14 /* libPods-CinemaAssistant.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +104,7 @@
 			children = (
 				DDAC9E3623FC0B630030EB7C /* Alamofire.framework */,
 				DDAC9E2C23FC0A5A0030EB7C /* Alamofire.framework */,
-				0C3610D4A6F3505FC8553D0E /* libPods-CinemaAssistant.a */,
+				C9FA871D20E87245B880D8EC /* libPods-CinemaAssistant.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -106,8 +112,8 @@
 		D41DEE916C53B96FFFEE25BD /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8DF7921C46365D007CF20FEA /* Pods-CinemaAssistant.debug.xcconfig */,
-				180D2FFFFAAF656C2A0CD1B8 /* Pods-CinemaAssistant.release.xcconfig */,
+				B41893AD8BE56F56E1A65C03 /* Pods-CinemaAssistant.debug.xcconfig */,
+				8A588D336207817FB32E98A7 /* Pods-CinemaAssistant.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -133,23 +139,25 @@
 		DD028BF223916DFC00D08EDD /* CinemaAssistant */ = {
 			isa = PBXGroup;
 			children = (
+				DD265A3C24470675006F3698 /* Cinema+CoreDataClass.swift */,
+				DD265A3D24470675006F3698 /* Cinema+CoreDataProperties.swift */,
 				DD028BF323916DFC00D08EDD /* AppDelegate.swift */,
 				DD028BF523916DFC00D08EDD /* SceneDelegate.swift */,
 				DD028BFB23916DFC00D08EDD /* Main.storyboard */,
+				DD4385202437697700E6F268 /* MeViewController.swift */,
 				DDAC9E0A23F9868D0030EB7C /* SeatPlanViewController.swift */,
 				DDAC9E0623F974C90030EB7C /* SessionTableViewController.swift */,
 				DDAC9E0423F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift */,
 				DD7603C023D0C4A8005F3DA1 /* ARViewController.swift */,
-				DD7603BE23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift */,
+				DD7603BE23D020DA005F3DA1 /* ForYouTableViewController.swift */,
 				DD718E5823BB40A800528B98 /* LoginViewController.swift */,
 				DD718E5A23BB40B700528B98 /* RegisterViewController.swift */,
-				DD718E5623BB3E6200528B98 /* MeTableViewController.swift */,
 				DDCB01F9239281B6000BFC78 /* CinemaMapViewController.swift */,
 				DDCB01F723927E6A000BFC78 /* HouseSelectionTableViewController.swift */,
 				DDCB01F5239267B4000BFC78 /* CinemaDetailTableViewController.swift */,
-				DD028C1123918CFD00D08EDD /* Cinema.swift */,
 				DD028C092391721700D08EDD /* CinemaTableViewController.swift */,
 				DDCB01FD2392A2D8000BFC78 /* MovieTableViewController.swift */,
+				DD265A332446FABA006F3698 /* PersistenceService.swift */,
 				DD73F4D323BA140000BF64DD /* MovieDetailViewController.swift */,
 				DD73F4CF23B9F8ED00BF64DD /* MovieFeed.swift */,
 				DDAC9E0823F9774F0030EB7C /* SessionFeed.swift */,
@@ -157,6 +165,7 @@
 				DD028C0023916E0100D08EDD /* LaunchScreen.storyboard */,
 				DD718E5C23BB419100528B98 /* GoogleService-Info.plist */,
 				DD028C0323916E0100D08EDD /* Info.plist */,
+				DD265A352446FB6C006F3698 /* CinemaAssistant.xcdatamodeld */,
 			);
 			path = CinemaAssistant;
 			sourceTree = "<group>";
@@ -168,11 +177,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD028C0623916E0100D08EDD /* Build configuration list for PBXNativeTarget "CinemaAssistant" */;
 			buildPhases = (
-				2D6401A415B83E1555042F73 /* [CP] Check Pods Manifest.lock */,
+				60FF7031230D86EDDF16F575 /* [CP] Check Pods Manifest.lock */,
 				DD028BEC23916DFC00D08EDD /* Sources */,
 				DD028BED23916DFC00D08EDD /* Frameworks */,
 				DD028BEE23916DFC00D08EDD /* Resources */,
 				DDAC9E3523FC0AD20030EB7C /* Embed Frameworks */,
+				46B4CC233D581B8974AB9058 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -231,7 +241,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2D6401A415B83E1555042F73 /* [CP] Check Pods Manifest.lock */ = {
+		46B4CC233D581B8974AB9058 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CinemaAssistant/Pods-CinemaAssistant-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		60FF7031230D86EDDF16F575 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -261,23 +288,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD718E5923BB40A800528B98 /* LoginViewController.swift in Sources */,
-				DD028C1223918CFD00D08EDD /* Cinema.swift in Sources */,
+				DD4385212437697700E6F268 /* MeViewController.swift in Sources */,
+				DD265A372446FB6C006F3698 /* CinemaAssistant.xcdatamodeld in Sources */,
 				DDAC9E0923F9774F0030EB7C /* SessionFeed.swift in Sources */,
 				DDCB01F823927E6A000BFC78 /* HouseSelectionTableViewController.swift in Sources */,
+				DD265A342446FABA006F3698 /* PersistenceService.swift in Sources */,
 				DDAC9E0B23F9868D0030EB7C /* SeatPlanViewController.swift in Sources */,
 				DDAC9E0723F974C90030EB7C /* SessionTableViewController.swift in Sources */,
 				DD028BF423916DFC00D08EDD /* AppDelegate.swift in Sources */,
+				DD265A3F24470675006F3698 /* Cinema+CoreDataProperties.swift in Sources */,
 				DD73F4D023B9F8ED00BF64DD /* MovieFeed.swift in Sources */,
-				DD718E5723BB3E6200528B98 /* MeTableViewController.swift in Sources */,
 				DD028BF623916DFC00D08EDD /* SceneDelegate.swift in Sources */,
 				DDAC9E0523F8394D0030EB7C /* CinemaOnShowMovieTableViewController.swift in Sources */,
 				DDCB01FE2392A2D8000BFC78 /* MovieTableViewController.swift in Sources */,
 				DDCB01FA239281B6000BFC78 /* CinemaMapViewController.swift in Sources */,
 				DD7603C123D0C4A8005F3DA1 /* ARViewController.swift in Sources */,
+				DD265A3E24470675006F3698 /* Cinema+CoreDataClass.swift in Sources */,
 				DDCB01F6239267B4000BFC78 /* CinemaDetailTableViewController.swift in Sources */,
 				DD718E5B23BB40B700528B98 /* RegisterViewController.swift in Sources */,
 				DD73F4D423BA140000BF64DD /* MovieDetailViewController.swift in Sources */,
-				DD7603BF23D020DA005F3DA1 /* FavoriteMovieTableViewController.swift in Sources */,
+				DD7603BF23D020DA005F3DA1 /* ForYouTableViewController.swift in Sources */,
 				DD028C0A2391721700D08EDD /* CinemaTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,7 +384,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -408,7 +438,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -420,7 +450,7 @@
 		};
 		DD028C0723916E0100D08EDD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8DF7921C46365D007CF20FEA /* Pods-CinemaAssistant.debug.xcconfig */;
+			baseConfigurationReference = B41893AD8BE56F56E1A65C03 /* Pods-CinemaAssistant.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -440,7 +470,7 @@
 		};
 		DD028C0823916E0100D08EDD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 180D2FFFFAAF656C2A0CD1B8 /* Pods-CinemaAssistant.release.xcconfig */;
+			baseConfigurationReference = 8A588D336207817FB32E98A7 /* Pods-CinemaAssistant.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -480,6 +510,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DD265A352446FB6C006F3698 /* CinemaAssistant.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DD265A362446FB6C006F3698 /* CinemaAssistant.xcdatamodel */,
+			);
+			currentVersion = DD265A362446FB6C006F3698 /* CinemaAssistant.xcdatamodel */;
+			path = CinemaAssistant.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = DD028BE823916DFC00D08EDD /* Project object */;
 }

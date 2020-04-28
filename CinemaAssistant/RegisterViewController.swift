@@ -8,16 +8,23 @@
 
 import UIKit
 import FirebaseAuth
+import GoogleSignIn
 
 class RegisterViewController: UIViewController {
 
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var signupBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        signupBtn.layer.cornerRadius = signupBtn.frame.height / 2
+        signupBtn.layer.borderColor = UIColor.white.cgColor
+        signupBtn.layer.borderWidth = 2
+        signupBtn.clipsToBounds = true
+        
     }
     
     @IBAction func registerBtnPressed(_ sender: UIButton) {
@@ -29,14 +36,15 @@ class RegisterViewController: UIViewController {
             
             if let e = error {
                 
-                let alertController = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                let alertController = UIAlertController(title: "註冊失敗", message: "輸入的資料不符合規格", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "重新輪入", style: .default, handler: nil))
                 self.present(alertController, animated: true)
                 
             }else{
-                let alertController = UIAlertController(title: "Success", message: "Registered Successfully", preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                let alertController = UIAlertController(title: "註冊成功", message: "你已成為Cinema Assistant的會員", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "好", style: .default, handler: { action in
                     Auth.auth().signIn(withEmail: username, password: password, completion: nil)
+                    UserDefaults.standard.set(Auth.auth().currentUser?.uid, forKey: "uid")
                     self.navigationController?.popToRootViewController(animated: true)
                     
                 }))

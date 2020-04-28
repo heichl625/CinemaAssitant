@@ -12,12 +12,14 @@ import Firebase
 import RealmSwift
 import SwiftyJSON
 import BTNavigationDropdownMenu
+import AlamofireImage
 
 
 class ForYouTableViewController: UITableViewController {
     
     var ref: DatabaseReference!
-    var user: User?
+    var uid: String?
+    let imageCache = NSCache<NSString, UIImage>()
     var api_key: String = "c411a985e4c5562757a616894b03eadb"
     
     var moviesID: [String] = []
@@ -25,12 +27,45 @@ class ForYouTableViewController: UITableViewController {
     var realmResults:Results<MovieFeed>?
     var suggestMovie: [String : String] = [:]
     
+    var showFavourite = true
+    
+    
+    let dropDownItem = ["最愛電影", "電影建議"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ref = Database.database().reference()
         
-        self.title = "For You"
+        
+        
+        let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController, containerView: self.navigationController!.view, title: BTTitle.title("最愛電影"), items: dropDownItem)
+        
+        navigationItem.titleView = menuView
+        
+        menuView.didSelectItemAtIndexHandler = {[weak self] (indexPath: Int) -> () in
+            
+            if indexPath == 0 {
+                //BTTitle.title("Favourite")
+                self!.showFavourite = true
+            }else{
+                //BTTitle.title("Suggestions")
+                self!.showFavourite = false
+            }
+            
+            self!.loadMovie()
+            self!.tableView.reloadData()
+            
+            
+            
+        }
+        
+        menuView.cellSeparatorColor = menuView.cellBackgroundColor
+        menuView.checkMarkImage = nil
+        menuView.cellBackgroundColor = UIColor(red:0.06, green:0.06, blue:0.06, alpha:1.00)
+        menuView.cellTextLabelColor = UIColor(red:1.00, green:0.20, blue:0.20, alpha:1.00)
+        menuView.selectedCellTextLabelColor = UIColor(red:1.00, green:0.20, blue:0.20, alpha:1.00)
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -41,17 +76,17 @@ class ForYouTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        if Auth.auth().currentUser != nil{
-            user = Auth.auth().currentUser
+        if let user = UserDefaults.standard.object(forKey: "uid"){
+            uid = user as! String
         }else{
-            let alertController = UIAlertController(title: "Login", message: "Please Login First", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            let alertController = UIAlertController(title: "登入", message: "請先登入以使用此功能", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "登入", style: .default, handler: { action in
                 self.performSegue(withIdentifier: "showLoginFromFavouriteMovie", sender: self)
             }))
+            alertController.addAction(UIAlertAction(title: "取消", style: .default, handler: nil))
             self.present(alertController, animated: true)
         }
-        
-        getFavouriteMovieID()
+        loadMovie()
     }
     
     // MARK: - Table view data source
@@ -64,11 +99,19 @@ class ForYouTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
-        if moviesID.count == 0{
-            return 0
-        }else{
-            return moviesID.count
+        if let result = realmResults{
+        
+            if result.count == 0{
+                print("First if: \(realmResults?.count)")
+                return 1
+            }else{
+                print("first else: \(realmResults?.count)")
+                return result.count
+            }
+        }else{print("second else: \(realmResults?.count)")
+            return 1
         }
+        
     }
     
     //    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -76,56 +119,135 @@ class ForYouTableViewController: UITableViewController {
     //    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "favMovieCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath)
         
         // Configure the cell...
-        if let cellTitle = cell.viewWithTag(101) as? UILabel{
+        print(realmResults?.count)
+        
+        if realmResults?.count == 0 || realmResults == nil {
             
-            if let result = realmResults{
+            print("no relmresult")
+            
+            if let cellTitle = cell.viewWithTag(101) as? UILabel{
                 
-                cellTitle.text = result[indexPath.row].original_title
+                cellTitle.text = "你尚未加入任何最愛電影"
                 
             }
             
-            
-        }
-        
-        if let cellReleaseDate = cell.viewWithTag(102) as? UILabel{
-            
-            if let result = realmResults{
+            if let cellReleaseDate = cell.viewWithTag(102) as? UILabel{
                 
-                cellReleaseDate.text = "Release Date： \(result[indexPath.row].release_date!)"
+                cellReleaseDate.text = "請於加入後再嘗試"
                 
             }
             
-        }
-        
-        
-        
-        if let cellImage = cell.viewWithTag(103) as? UIImageView {
+            if let cellImage = cell.viewWithTag(103) as? UIImageView{
+                
+                cellImage.image = nil
+                
+            }
             
-            if let result = realmResults{
+        } else {
+            
+            
+            
+            if let cellTitle = cell.viewWithTag(101) as? UILabel{
                 
-                let urlSubString = result[indexPath.row].poster_path
-                
-                
-                if let unwrappedSubString = urlSubString {
+                if let result = realmResults{
                     
-                    Alamofire.request("https://image.tmdb.org/t/p/w500/\(unwrappedSubString)").responseData {
-                        response in
+                    cellTitle.text = result[indexPath.row].original_title
+                    
+                }
+                
+                
+            }
+            
+            if let cellReleaseDate = cell.viewWithTag(102) as? UILabel{
+                
+                if let result = realmResults{
+                    print("RealmResult: \(realmResults)")
+                    
+                    cellReleaseDate.text = "上映日期： \(result[indexPath.row].release_date!)"
+                    
+                }
+                
+            }
+            
+            
+            
+            if let cellImage = cell.viewWithTag(103) as? UIImageView {
+                
+                if let result = realmResults{
+                    
+                    if self.imageCache.object(forKey: result[indexPath.row].id as NSString? ?? "") == nil{
                         
-                        if let data = response.result.value {
-                            cellImage.image = UIImage(data: data, scale:1)
+                        let url = "https://image.tmdb.org/t/p/w500/" + result[indexPath.row].poster_path!
+                        
+                        AF.request(url).responseImage { response in
+                            
+                            switch(response.result){
+                                
+                            case let .success(image):
+                                print("write image to cache")
+                                self.imageCache.setObject(image, forKey: result[indexPath.row].id as NSString? ?? "")
+                                cellImage.image = self.imageCache.object(forKey: result[indexPath.row].id as NSString? ?? "")
+                                
+                            case let .failure(error):
+                                print(error)
+                                
+                            }
                         }
+                    }else{
+                        
+                        cellImage.image = self.imageCache.object(forKey: result[indexPath.row].id! as NSString)
                     }
+                    
                 }
             }
+            
+            
+            //                if let image = self.imageCache.image(withIdentifier: result[indexPath.row].id!){
+            //
+            //                    cellImage.image = image
+            //
+            //                }
+            //            }
+            
+            //            if let result = realmResults{
+            //
+            //
+            //
+            //                            let urlSubString = result[indexPath.row].poster_path
+            //
+            //
+            //                            if let unwrappedSubString = urlSubString {
+            //
+            //                                DispatchQueue.global(qos: .background).async {
+            //                                    AF.request("https://image.tmdb.org/t/p/w500/\(unwrappedSubString)").responseData {
+            //                                        response in
+            //
+            //                                        if let data = response.result.value {
+            //
+            //                                            DispatchQueue.main.async{
+            //
+            //                                                cellImage.image = UIImage(data: data, scale:1)
+            //
+            //                                            }
+            //
+            //                                        }
+            //                                    }
+            //                                }
+            //
+            //
+            //                            }
+            //            //            }
+            //            }
+            
+            
         }
         return cell
-        
-        
-        
     }
+    
+    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -133,18 +255,105 @@ class ForYouTableViewController: UITableViewController {
         tableView.cellForRow(at: indexPath)?.isSelected = false
     }
     
+    func getSuggestionMovie(){
+        
+        
+        let keys = self.suggestMovie.keys
+        
+        let realm = try! Realm()
+        
+        let group = DispatchGroup()
+        
+        if keys.count > 0{
+            
+            print("show Suggestion Movie")
+            
+            try! realm.write {
+                
+                realm.deleteAll()
+                print("All realm deleted")
+                
+            }
+            
+            for key in keys {
+                
+                //print(key)
+                
+                print(key)
+                
+                group.enter()
+                
+                AF.request("https://api.themoviedb.org/3/movie/\(key)?api_key=c411a985e4c5562757a616894b03eadb").responseJSON{ response in
+                    
+                    var jsonResult: JSON?
+                    
+                    //print("Alamofire key: \(key)")
+                    
+                    switch(response.result){
+                        
+                    case let .success(value):
+                        
+                        jsonResult = JSON(value)
+                        
+                        let movie = MovieFeed()
+                        
+                        movie.id = key
+                        movie.original_title = self.suggestMovie[key]
+                        movie.overview = jsonResult?["overview"].stringValue
+                        movie.release_date = jsonResult?["release_date"].stringValue
+                        movie.poster_path = jsonResult?["poster_path"].stringValue
+                        
+                        
+                        
+                        try! realm.write{
+                            
+                            realm.add(movie)
+                            
+                        }
+                        
+                        group.leave()
+                        
+                    case let .failure(error):
+                        print(error)
+                        
+                    }
+                    
+                    
+                }
+                
+                
+                self.realmResults = realm.objects(MovieFeed.self)
+                
+                
+                group.notify(queue: .main){
+                    DispatchQueue.main.async {
+                        print(self.realmResults?.count)
+                        self.tableView.reloadData()
+                    }
+                }
+                
+                
+            }
+        }
+        
+        
+        
+    }
+    
     func getFavouriteMovieID(){
         
-        if user != nil {
+        if let id = uid{
             
-            ref.child("users").child(user!.uid).child("favMovies").observeSingleEvent(of: .value, with: { snapshot in
+            ref.child("users").child(id).child("favMovies").observeSingleEvent(of: .value, with: { snapshot in
                 
                 let value = snapshot.value as? NSDictionary
+                self.moviesID.removeAll()
                 
                 if value != nil{
                     
                     //print("All MovieID removed")
-                    self.moviesID.removeAll()
+                    
+                    print(value?.allKeys)
                     
                     for key in value!.allKeys{
                         
@@ -173,18 +382,16 @@ class ForYouTableViewController: UITableViewController {
         try! realm.write {
             realm.deleteAll()
             print("All realm deleted")
+            
         }
         
         for n in 0..<self.moviesID.count{
             
             print("Loop count: \(n)")
             
-            self.ref.child("users").child(self.user!.uid).child("favMovies").child(self.moviesID[n]).observeSingleEvent(of: .value, with: { snapshot in
+            self.ref.child("users").child(uid!).child("favMovies").child(moviesID[n]).observeSingleEvent(of: .value, with: { snapshot in
                 
                 let value = snapshot.value as? NSDictionary
-                
-                
-                
                 let movie = MovieFeed()
                 
                 movie.id = self.moviesID[n]
@@ -194,27 +401,23 @@ class ForYouTableViewController: UITableViewController {
                 movie.poster_path = value?["imgURL"] as? String
                 
                 try! realm.write{
-                    
                     realm.add(movie)
-                    
-                    //                    print("movie \(movie.id) added to the realm")
-                    //                    print("realmResult count: \(self.realmResults?.count)")
-                    
-                    self.tableView.reloadData()
-                    
                 }
                 
-                
-                
                 self.realmResults = realm.objects(MovieFeed.self)
-                self.getSuggestionList()
+                
+                DispatchQueue.main.async{
+                    self.tableView.reloadData()
+                }
+                //self.getSuggestionList()
                 
             }){ (error) in
                 print(error.localizedDescription)
             }
-            
+           
             
         }
+         self.tableView.reloadData()
         
         
         
@@ -226,54 +429,97 @@ class ForYouTableViewController: UITableViewController {
         
         print("count: \(realmResults?.count)")
         
+        
+        
+        
+        
         if let result = realmResults{
             
             if result.count > 0{
                 
-                print("inside suggestionList: \(result.count-1)")
+                let group = DispatchGroup()
+                //print("inside suggestionList: \(result.count-1)")
                 
-                let url = "https://api.themoviedb.org/3/movie/\(result[result.count-1].id!)/recommendations?api_key=\(api_key)&language=en-US&page=1"
-                
-                Alamofire.request(url).responseJSON{ response in
+                for r in result {
                     
-                    print("inside alamofire")
+                    group.enter()
                     
-                    suggestionResult = JSON(response.result.value)
+                    let url = "https://api.themoviedb.org/3/movie/\(r.id!)/recommendations?api_key=\(api_key)&language=zh-HK&page=1"
                     
-                    print(suggestionResult)
+                    print(url)
                     
-                    if suggestionResult!["results"].count > 0{
+                    
+                    AF.request(url).responseJSON{ response in
                         
-                        for n in 0..<suggestionResult!["results"].count{
+                        //print("inside alamofire")
+                        
+                        switch(response.result){
                             
-                            var writeIn = true
+                        case let .success(value):
+                            suggestionResult = JSON(value)
                             
-                            if self.moviesID.count > 0{
-                                for m in 0..<self.moviesID.count{
+                            //print(suggestionResult)
+                            
+                            if suggestionResult!["results"].count > 0{
+                                
+                                print(suggestionResult!["results"].count)
+                                for n in 0..<suggestionResult!["results"].count{
                                     
-                                    if self.moviesID[m] == suggestionResult!["results"][n]["id"].stringValue{
-                                        
-                                        writeIn = false
-                                        break
-                                        
+                                    var writeIn = true
+                                    
+                                    if self.moviesID.count > 0{
+                                        for m in 0..<self.moviesID.count{
+                                            if self.moviesID[m] == suggestionResult!["results"][n]["id"].stringValue{
+                                                writeIn = false
+                                                continue
+                                            }
+                                        }
+                                    }
+                                    
+                                    if writeIn {
+                                        //print("writing movies into suggestion list")
+                                        self.suggestMovie[suggestionResult!["results"][n]["id"].stringValue] = suggestionResult!["results"][n]["title"].stringValue
+                                        print(self.suggestMovie[suggestionResult!["results"][n]["id"].stringValue])
                                     }
                                     
                                 }
+                                group.leave()
                             }
                             
-                            if writeIn {
-                                self.suggestMovie[suggestionResult!["results"][n]["id"].stringValue] = suggestionResult!["results"][n]["title"].stringValue
-                            }
+                        case let .failure(error):
+                            print(error)
+                            
                             
                         }
-                        print(self.suggestMovie)
+                        
+                    }
+                    
+                    group.notify(queue: .main){
+                        print("get suggestion movies")
+                        self.getSuggestionMovie()
                     }
                 }
+                
+                
+                
             }
         }
         
         //Get suggestion movie info
         //suggestMovie!["results"][n]["poster_path"].stringValue && //suggestionResult!["results"][n]["title"].stringValue
+        
+    }
+    
+    func loadMovie(){
+        
+        if showFavourite{
+            getFavouriteMovieID()
+        }else{
+            
+            let group = DispatchGroup()
+            getSuggestionList()
+            self.tableView.reloadData()
+        }
         
     }
     
@@ -283,7 +529,8 @@ class ForYouTableViewController: UITableViewController {
             
             if let destinationVC = segue.destination as? MovieDetailViewController{
                 
-                destinationVC.id = moviesID[tableView.indexPathForSelectedRow!.row]
+                destinationVC.id = realmResults?[tableView.indexPathForSelectedRow!.row].id ?? ""
+                destinationVC.posterPath = realmResults?[tableView.indexPathForSelectedRow!.row].poster_path ?? ""
                 destinationVC.movieTitle = realmResults?[tableView.indexPathForSelectedRow!.row].original_title ?? ""
                 destinationVC.overviewStr = realmResults?[tableView.indexPathForSelectedRow!.row].overview ?? ""
                 destinationVC.releaseDateStr = realmResults?[tableView.indexPathForSelectedRow!.row].release_date ?? ""

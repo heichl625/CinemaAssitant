@@ -10,33 +10,69 @@ import UIKit
 import RealmSwift
 import SwiftyJSON
 import Alamofire
+import AlamofireImage
 import FirebaseDatabase
+import CoreData
+
+class Responder: NSObject {
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        
+        UIView.animate(withDuration: 0.3) {
+            buttonBar.frame.origin.x = (segmentedControl.frame.width / CGFloat(segmentedControl.numberOfSegments)) * CGFloat(segmentedControl.selectedSegmentIndex)
+        }
+        
+    }
+}
+
+let responder = Responder()
+let segmentedControl = UISegmentedControl()
+let buttonBar = UIView()
 
 class CinemaTableViewController: UITableViewController {
     
     //cinemaImgLink = https://imgur.com/a/5BY8ANj
     
-    var realmResults:Results<Cinema>?
-    var cinemaImg = [UIImage?](repeating: nil, count: 23)
-    
+    var cinemas = [Cinema]()
     var ref: DatabaseReference!
     var imageData: Data?
+    let imageCache = NSCache<NSString, UIImage>()
+    let thumbnailCache = NSCache<NSString, UIImage>()
+    
+    let fetchRequest: NSFetchRequest<Cinema> = Cinema.fetchRequest()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupSegmentControlBar()
+        
         ref = Database.database().reference()
-        getData()
+        imageCache.countLimit = 23
+        thumbnailCache.countLimit = 23
+        
+        
+        
+        if UserDefaults.standard.bool(forKey: "cinemaDataLoaded"){
+            
+            do{
+                let cinemas = try PersistenceService.context.fetch(fetchRequest)
+                self.cinemas = cinemas
+                self.tableView.reloadData()
+            }catch{
+                print("Failed to fetch request")
+            }
+        }else{
+            getData()
+        }
+        
+//        self.loadSeatToFirebase()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        
-    //    }
     
     // MARK: - Table view data source
     
@@ -47,7 +83,7 @@ class CinemaTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return realmResults?.count ?? 0
+        return cinemas.count
     }
     
     
@@ -57,17 +93,17 @@ class CinemaTableViewController: UITableViewController {
         // Configure the cell...
         if let cellCinemaName = cell.viewWithTag(101) as? UILabel {
             
-            if realmResults != nil {
-                cellCinemaName.text = realmResults![indexPath.row].cinemaName
-            }
+            
+            cellCinemaName.text = cinemas[indexPath.row].cinemaName
+            
             
         }
         
         if let cellAddress = cell.viewWithTag(102) as? UILabel {
             
-            if realmResults != nil {
-                cellAddress.text = realmResults![indexPath.row].address
-            }
+            
+            cellAddress.text = cinemas[indexPath.row].address
+            
             
         }
         
@@ -75,15 +111,10 @@ class CinemaTableViewController: UITableViewController {
             
             //cellImage.image = cinemaImgs[indexPath.row]
             //print("Showing Image: \(realmResults![indexPath.row].cinemaImg)")
-            if let results = realmResults{
-                
-                let cinemaid = results[indexPath.row].id
-                
-                if cinemaImg[cinemaid-1] != nil{
-                    
-                    cellImage.image = cinemaImg[cinemaid-1]
-                    
-                }
+            
+            //            let cinemaid = cinema[indexPath.row].id
+            if let thumbnails = cinemas[indexPath.row].thumbnails{
+                cellImage.image = UIImage(data: thumbnails)
             }
             
         }
@@ -91,73 +122,97 @@ class CinemaTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        
+        cell?.isSelected = false
+    }
+    
     func getData() {
         
+        let group = DispatchGroup()
         
-        let realm = try! Realm()
-        
-        
-        try! realm.write {
-            realm.deleteAll()
-        }
         
         for n in 1...23 {
             
-            ref.child("cinema").child("\(n)").observeSingleEvent(of: .value, with: { (snapshot) in
+            group.enter()
+            
+            let alertController = UIAlertController(title: nil, message: "Downloading Cinema Data...", preferredStyle: .alert)
+            present(alertController, animated: true, completion: nil)
+            
+            self.ref.child("cinema").child("\(n)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
-                //print("reading database")
+                print("Getting cinema results")
                 
                 let value = snapshot.value as? NSDictionary
                 
+                let cinema = Cinema(context: PersistenceService.context)
                 
-                try! realm.write {
+                cinema.cinemaID = Int16(n)
+                cinema.cinemaName = value?["cinemaName"] as? String ?? ""
+                cinema.address = value?["address"] as? String ?? ""
+                cinema.district = value?["district"] as? String ?? ""
+                cinema.cinemaGroup = value?["cinemaGroup"] as? String ?? ""
+                cinema.tel = value?["tel"] as? String ?? ""
+                cinema.lat = value?["lat"] as? Double ?? 0.0
+                cinema.lon = value?["lon"] as? Double ?? 0.0
+                
+                let thumbnailsURL = value?["thumbnailsURL"] as? String
+                
+                AF.request(thumbnailsURL!).responseData { response in
                     
-                    let cinema = Cinema()
-                    
-                    cinema.id = n
-                    cinema.cinemaName = value?["cinemaName"] as? String ?? ""
-                    cinema.address = value?["address"] as? String ?? ""
-                    cinema.district = value?["district"] as? String ?? ""
-                    cinema.cinemaGroup = value?["cinemaGroup"] as? String ?? ""
-                    
-                    
-                    if let url = value?["imgURL"] as? String {
+                    switch(response.result){
                         
-                        Alamofire.request(url).responseData { response in
+                    case let .success(thumbnailsData):
+                        print("Getting thumbnails")
+                        cinema.thumbnails = thumbnailsData
+                        group.leave()
+                    case let .failure(error):
+                        print(error)
+                        
+                    }
+                    
+                    
+                    //self.thumbnailCache.setObject(image, forKey: "\(cinema.id)" as NSString)
+                }
+                
+                DispatchQueue.global(qos: .background).async{
+                    
+                    let imgURL = value?["imgURL"] as? String
+                    
+                    AF.request(imgURL!).responseData { response in
+                        
+                        
+                        switch(response.result){
                             
-                            if let data = response.result.value{
-                                
-                                self.cinemaImg[cinema.id-1] = UIImage(data: data, scale: 1)
-                                print("Cinema ID \(cinema.id) image loaded")
-                                
-                            }
+                        case let .success(data):
+                            print("Getting image")
+                            
+                            cinema.fullImage = data
+                            PersistenceService.saveContext()
+                        case let .failure(error):
+                            print(error)
+                            
                             
                         }
                         
                     }
-                    cinema.tel = value?["tel"] as? String ?? ""
-                    
-                    
-                    realm.add(cinema)
-                    //print("realm write")
                     
                 }
                 
-                
-                if n == 23 {
-                    print("Last operation in loop")
-                    self.realmResults = realm.objects(Cinema.self)
-                    
+                group.notify(queue: .main){
+                    self.cinemas.append(cinema)
+                    alertController.dismiss(animated: true, completion: nil)
+                    self.tableView.reloadData()
                 }
-                
-                self.tableView.reloadData()
                 
             }){ (error) in
                 print(error.localizedDescription)
             }
-            
-            
         }
+        
+        UserDefaults.standard.set(true, forKey: "cinemaDataLoaded")
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -168,20 +223,119 @@ class CinemaTableViewController: UITableViewController {
                 
                 let selectedIndex = tableView.indexPathForSelectedRow!
                 
-                if let result = realmResults {
-                    destinationVC.cinemaName = result[selectedIndex.row].cinemaName
-                    destinationVC.address = result[selectedIndex.row].address
-                    destinationVC.district = result[selectedIndex.row].district
-                    destinationVC.tel = result[selectedIndex.row].tel
-                    destinationVC.cinemaID = result[selectedIndex.row].id
-                    destinationVC.image = cinemaImg[result[selectedIndex.row].id-1]
-                    destinationVC.cinemaGroup   = result[selectedIndex.row].cinemaGroup
-                }
+                destinationVC.cinemaName = cinemas[selectedIndex.row].cinemaName
+                destinationVC.address = cinemas[selectedIndex.row].address
+                destinationVC.district = cinemas[selectedIndex.row].district
+                destinationVC.tel = cinemas[selectedIndex.row].tel
+                destinationVC.cinemaID = Int(cinemas[selectedIndex.row].cinemaID)
+                destinationVC.image = UIImage(data: cinemas[selectedIndex.row].fullImage!)
+                destinationVC.cinemaGroup   = cinemas[selectedIndex.row].cinemaGroup
+                destinationVC.lat = cinemas[selectedIndex.row].lat
+                destinationVC.lon = cinemas[selectedIndex.row].lon
                 //destinationVC.image = cinemaImgURL[selectedIndex.row]
                 
             }
         }
     }
+    
+    
+    
+    @objc func segmentSelected(sender: UISegmentedControl){
+        
+        var cinemaBrand: String = ""
+        cinemaBrand = sender.titleForSegment(at: sender.selectedSegmentIndex)!
+        
+        switch(sender.selectedSegmentIndex){
+            
+        case 1, 2:
+            fetchRequest.predicate = NSPredicate(format: "cinemaGroup == %@", cinemaBrand)
+        case 3:
+            fetchRequest.predicate = NSPredicate(format: "cinemaGroup == %@", "Broadway")
+        case 4:
+            fetchRequest.predicate = NSPredicate(format: "cinemaGroup == %@", "GoldenHarvest")
+        case 5:
+            fetchRequest.predicate = NSPredicate(format: "cinemaGroup != %@ && cinemaGroup != %@ && cinemaGroup != %@ && cinemaGroup != %@", "GoldenHarvest", "Broadway", "UA", "MCL")
+        default:
+            fetchRequest.predicate = nil
+            
+        }
+        
+        do{
+            let cinemas = try PersistenceService.context.fetch(fetchRequest)
+            self.cinemas = cinemas
+            self.tableView.reloadData()
+        }catch{
+            print("Failed to fetch request")
+        }
+    }
+    
+    func setupSegmentControlBar(){
+        
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 40))
+        view.backgroundColor = .black
+        
+        
+        // Add segments
+        segmentedControl.insertSegment(withTitle: "全部", at: 0, animated: true)
+        segmentedControl.insertSegment(withTitle: "MCL", at: 1, animated: true)
+        segmentedControl.insertSegment(withTitle: "UA", at: 2, animated: true)
+        segmentedControl.insertSegment(withTitle: "百老匯", at: 3, animated: true)
+        segmentedControl.insertSegment(withTitle: "嘉禾", at: 4, animated: true)
+        segmentedControl.insertSegment(withTitle: "其他", at: 5, animated: true)
+        // First segment is selected by default
+        segmentedControl.selectedSegmentIndex = 0
+        
+        // Add lines below selectedSegmentIndex
+        segmentedControl.tintColor = .clear
+        segmentedControl.backgroundColor = .clear
+        segmentedControl.selectedSegmentTintColor = .clear
+        
+        // Add lines below the segmented control's tintColor
+        segmentedControl.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        
+        segmentedControl.setTitleTextAttributes([
+            NSAttributedString.Key.foregroundColor: UIColor(red:1.00, green:0.20, blue:0.20, alpha:1.00)
+        ], for: .selected)
+        
+        // This needs to be false since we are using auto layout constraints
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the segmented control to the container view
+        view.addSubview(segmentedControl)
+        
+        // Constrain the segmented control to the top of the container view
+        segmentedControl.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        // Constrain the segmented control width to be equal to the container view width
+        segmentedControl.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        // Constraining the height of the segmented control to an arbitrarily chosen value
+        segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        
+        // This needs to be false since we are using auto layout constraints
+        buttonBar.translatesAutoresizingMaskIntoConstraints = false
+        buttonBar.backgroundColor = UIColor(red:1.00, green:0.20, blue:0.20, alpha:1.00)
+        
+        view.addSubview(buttonBar)
+        
+        buttonBar.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor).isActive = true
+        buttonBar.heightAnchor.constraint(equalToConstant: 5).isActive = true
+        // Constrain the button bar to the left side of the segmented control
+        buttonBar.leftAnchor.constraint(equalTo: segmentedControl.leftAnchor).isActive = true
+        // Constrain the button bar to the width of the segmented control divided by the number of segments
+        buttonBar.widthAnchor.constraint(equalTo: segmentedControl.widthAnchor, multiplier: 1 / CGFloat(segmentedControl.numberOfSegments)).isActive = true
+        
+        
+        
+        segmentedControl.addTarget(responder, action: #selector(responder.segmentedControlValueChanged(_:)), for: UIControl.Event.valueChanged)
+        segmentedControl.addTarget(self, action: #selector(CinemaTableViewController.segmentSelected), for:.valueChanged)
+        
+        tableView.tableHeaderView = view
+        
+    }
+    
+    
     
     /*
      // Override to support conditional editing of the table view.

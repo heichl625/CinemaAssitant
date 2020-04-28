@@ -12,6 +12,18 @@ import SwiftyJSON
 import RealmSwift
 import WebKit
 import SwiftSoup
+import BTNavigationDropdownMenu
+
+
+class MovieSession{
+    
+    var houseName: String?
+    var onShowDate: String?
+    var onShowTime: String?
+    var purchaseURL: String?
+    var price: String?
+    
+}
 
 class SessionTableViewController: UITableViewController {
     
@@ -21,6 +33,12 @@ class SessionTableViewController: UITableViewController {
     var movieName: String?
     var cinemaGroup: String?
     var UASessionID: [String] = []
+    var sessions: [MovieSession] = []
+    var firebaseCinemaID: Int?
+    var dataFetchingDate: String?
+    var pendingDate: [String] = []
+    var dropDownItem: [String] = []
+    var youtubeURL: String?
     
     var realmResults:Results<SessionFeed>?
     let realm = try! Realm()
@@ -31,46 +49,71 @@ class SessionTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(dataFetchingDate)
+        
+        let currentDate = Date()
+        
+        let dateFormatter = DateFormatter()
+        //
+        
+        var dateComponent = DateComponents()
+        
+        dateComponent.day = 1
+        
+        var dateToProcess = currentDate
+        
+        //dropDownItem
+        
+        for n in 0..<3 {
+            
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let dateStr = dateFormatter.string(from: dateToProcess)
+            
+            pendingDate.append(dateStr)
+            
+            if n == 0{
+                dropDownItem.append("今天")
+            }else if n == 1{
+                dropDownItem.append("明天")
+            }else{
+                if cinemaGroup != "Newport"{
+                    dropDownItem.append(dateStr)
+                }
+            }
+            
+            dateToProcess = Calendar.current.date(byAdding: dateComponent, to: dateToProcess)!
+            
+            
+            
+        }
+        
+        
+        let menuView = BTNavigationDropdownMenu(navigationController: self.navigationController, containerView: self.navigationController!.view, title: BTTitle.title("今天"), items: dropDownItem)
+        
+        navigationItem.titleView = menuView
+        
+        menuView.didSelectItemAtIndexHandler = {[weak self] (indexPath: Int) -> () in
+            
+            self!.dataFetchingDate = self!.pendingDate[indexPath]
+            self!.handleWebData()
+            self!.tableView.reloadData()
+            //self!.loadMovie()
+            
+            
+        }
+        
+        menuView.cellSeparatorColor = menuView.cellBackgroundColor
+        menuView.checkMarkImage = nil
+        menuView.cellBackgroundColor = UIColor(red:0.06, green:0.06, blue:0.06, alpha:1.00)
+        menuView.cellTextLabelColor = UIColor(red:1.00, green:0.20, blue:0.20, alpha:1.00)
+        menuView.selectedCellTextLabelColor = UIColor(red:1.00, green:0.20, blue:0.20, alpha:1.00)
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
-        switch(cinemaGroup){
-            
-        case "MCL":
-            Alamofire.request("https://www.mclcinema.com/MCLOpenAPI/en-US/MovieDetails/www/\(movieID!)/Cinema/\(cinemaID!)", method: .get).validate().responseJSON {
-                response in
-                
-                print("Result: \(response.result)") // response serialization result
-                
-                switch response.result {
-                    
-                case .success(let value):
-                    
-                    self.getMovieDetailID(value: value)
-                    self.getSessionDetail(movieID: self.movieID!, movieDetailID: self.movieDetailID!, cinemaID: self.cinemaID!)
-                    
-                case .failure(let error):
-                    print(error)
-                }
-                
-            }
-            
-        case "UA":
-            handleUA()
-            
-            //print(UASessionID)
-            
-        default:
-            break
-            
-        }
-        
-        //        dispatchGroup.notify(queue: .main){
-        //            self.tableView.reloadData()
-        //        }
+        handleWebData()
         
         
         
@@ -85,107 +128,55 @@ class SessionTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        
-        //print("number of row: \(Thread.current)")
-        return realmResults?.count ?? 0
-        
-        
-        
+
+            if sessions.count > 0{
+                return sessions.count
+            }else{
+                return 1
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sessionCell", for: indexPath)
-        
-        if let houseName = cell.viewWithTag(100) as? UILabel {
             
-            houseName.text = realmResults?[indexPath.row].movieOnShowHouse ?? "Undefined"
+            if let houseName = cell.viewWithTag(100) as? UILabel {
+                
+                if sessions.count > 0{
+                    
+                    if cinemaGroup == "Lux"{
+                        houseName.text = "Lux"
+                    }else{
+                        houseName.text = sessions[indexPath.row].houseName
+                    }
+                }
+                
+            }
+            
+            if let onShowTime = cell.viewWithTag(101) as? UILabel{
+                
+                if sessions.count > 0{
+                    onShowTime.text = "\(sessions[indexPath.row].onShowDate!) \(sessions[indexPath.row].onShowTime!)"
+                }
+                
+            }
             
             
-        }
-        
-        if let onShowTime = cell.viewWithTag(101) as? UILabel {
-            
-            var dateTime = realmResults?[indexPath.row].movieDate ?? ""
-            dateTime += " \(realmResults?[indexPath.row].movieTime ?? "")"
-            dateTime += " (\(realmResults?[indexPath.row].movieOnShowDay ?? ""))"
-            
-            onShowTime.text = dateTime
-            
-            
-        }
         //print("cellforrow: \(Thread.current)")
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "showSeatPlanFromSession", sender: self)
+        
+        if cinemaGroup != "Lux"{
+            performSegue(withIdentifier: "showSeatPlanFromSession", sender: self)
+        }else{
+            let alertController = UIAlertController(title: "抱歉", message: "影院並沒有提供座位資訊", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alertController, animated: true)
+        }
         tableView.cellForRow(at: indexPath)?.isSelected = false
     }
-    
-    
-    func getMovieDetailID(value: Any){
-        
-        let jsonResults = JSON(value)
-        
-        movieDetailID = jsonResults[0]["MovieDetailID"].stringValue
-        
-        tableView.reloadData()
-        
-    }
-    
-    func getSessionDetail(movieID: String, movieDetailID: String, cinemaID: String){
-        
-        
-        Alamofire.request("https://www.mclcinema.com/MCLOpenAPI/en-US/MovieDetail/www/Movie/\(movieID)/Version/\(movieDetailID)/Cinema/\(cinemaID)").validate().responseJSON { response in
-            
-            switch response.result {
-                
-            case .success(let value):
-                
-                let jsonResults = JSON(value)
-                
-                try! self.realm.write {
-                    self.realm.deleteAll()
-                }
-                
-                for index in 0..<jsonResults["MovieSessions"].count {
-                    
-                    let sessionFeed = SessionFeed()
-                    sessionFeed.movieID = movieID
-                    sessionFeed.sessionID = jsonResults["MovieSessions"][index]["SessionID"].stringValue
-                    sessionFeed.movieDate = jsonResults["MovieSessions"][index]["Day"].stringValue
-                    sessionFeed.movieLang = jsonResults["Language"].stringValue
-                    sessionFeed.movieAdultPrice = jsonResults["MovieSessions"][index]["AdultPrice"].intValue
-                    sessionFeed.movieName = jsonResults["VersionName"].stringValue
-                    sessionFeed.movieTime = jsonResults["MovieSessions"][index]["Time"].stringValue
-                    sessionFeed.movieFormat = jsonResults["Format"].stringValue
-                    sessionFeed.movieOnShowDay = jsonResults["MovieSessions"][index]["DayOfWeek"].stringValue
-                    sessionFeed.movieChildPrice = jsonResults["MovieSessions"][index]["ChildPrice"].intValue
-                    sessionFeed.movieOnShowHouse = jsonResults["MovieSessions"][index]["ScreenName"].stringValue
-                    sessionFeed.movieSeniorPrice = jsonResults["MovieSessions"][index]["SeniorPrice"].intValue
-                    sessionFeed.movieStudentPrice = jsonResults["MovieSessions"][index]["StudentPrice"].intValue
-                    
-                    
-                    try! self.realm.write {
-                        self.realm.add(sessionFeed)
-                    }
-                }
-                
-                
-                print("getSessionDetail: \(Thread.current)")
-                self.realmResults = self.realm.objects(SessionFeed.self)
-                self.tableView.reloadData()
-                
-                
-                
-            case .failure(let error):
-                print(error)
-            }
-            
-            
-        }
-        
-    }
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -195,17 +186,18 @@ class SessionTableViewController: UITableViewController {
             
             if let destinationVC  = segue.destination as? SeatPlanViewController {
                 
-                destinationVC.adultPrice = realmResults![indexPath!.row].movieAdultPrice
-                destinationVC.childPrice = realmResults![indexPath!.row].movieChildPrice
-                destinationVC.format = realmResults![indexPath!.row].movieFormat
-                destinationVC.houseName = realmResults![indexPath!.row].movieOnShowHouse
-                destinationVC.seniorPrice = realmResults![indexPath!.row].movieSeniorPrice
-                destinationVC.studentPrice = realmResults![indexPath!.row].movieStudentPrice
-                destinationVC.time = realmResults![indexPath!.row].movieTime
-                destinationVC.movieName = realmResults![indexPath!.row].movieName
+                destinationVC.firebaseCinemaID = self.firebaseCinemaID
                 destinationVC.cinemaID = self.cinemaID
-                destinationVC.sessionID = realmResults![indexPath!.row].sessionID
                 destinationVC.cinemaGroup = self.cinemaGroup
+                destinationVC.movieName = self.movieName
+                destinationVC.houseName = self.sessions[indexPath!.row].houseName
+                destinationVC.time = self.sessions[indexPath!.row].onShowTime
+                destinationVC.seatPlanURL = URL(string: self.sessions[indexPath!.row].purchaseURL!)
+                destinationVC.date = self.dataFetchingDate
+                destinationVC.price = self.sessions[indexPath!.row].price
+                destinationVC.youtubeURL = self.youtubeURL
+                
+                
                 
             }
             
@@ -213,141 +205,137 @@ class SessionTableViewController: UITableViewController {
         
     }
     
-    func handleUA(){
+    func getTrailerURL(){
         
-        //dispatchGroup.enter()
-        let url = URL(string: "https://www.uacinemas.com.hk/eng/cinema/\(cinemaID!)")
+        let url = URL(string: "https://wmoov.com/movie/trailers/\(self.movieID!)")
         
-       
-           
-        
-        let task = URLSession.shared.dataTask(with: url!){ (data, response, error) in
+        DispatchQueue.global(qos: .background).async{
             
-            if error != nil {
-                print(error)
-            }else{
-                
-                 DispatchQueue.main.async {
-                
-                do {
+            let task = URLSession.shared.dataTask(with: url!){ (data, response, error) in
+            
+                if error != nil{
+                    print(error)
+                }else{
                     
-                    let html = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                    
-                    
-                    let doc: Document = try SwiftSoup.parse(html! as String)
-                    
-                    let lists: Elements = try! doc.select("li")
-                    
-                    //get cinemaLinkID
-                    let inputs: Elements = try! lists.select("input")
-                    
-                    for input in inputs {
-                        if try input.className() == "sub buyTicketBtn"{
-                            self.cinemaID = try! input.attr("cinema-id")
-                            print(self.cinemaID)
-                            break
-                        }
+                    do{
+                        
+                        let html = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+                        let doc: Document = try SwiftSoup.parse(html! as String)
+                        
+                        let iframe: Element = try! doc.select("iframe").first()!
+                        
+                        self.youtubeURL = try! iframe.attr("src")
+                        
+                        print(self.youtubeURL)
+                        
+
+                        
+                    }catch Exception.Error(type: let type, Message: let message){
+                        print(type)
+                        print(message)
+                    }catch{
+                        print("")
                     }
                     
-                    for list in lists{
+                }
+                
+            }
+            task.resume()
+        }
+        
+    }
+    
+    func handleWebData(){
+        
+        sessions.removeAll()
+        
+        let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
+        cell?.isUserInteractionEnabled = true
+        
+        
+        let url = URL(string: "https://wmoov.com/cinema/movies/\(self.cinemaID!)?date=\(self.dataFetchingDate!)&movie=\(self.movieID!)")
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            let task = URLSession.shared.dataTask(with: url!){ (data, response, error) in
+                
+                if error != nil {
+                    print(error)
+                }else{
+                    
+                    do{
                         
+                        let html = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+                        let doc: Document = try SwiftSoup.parse(html! as String)
                         
-                        //get movie poster
-                        if try list.className() == "desktop"{
+                        let trs: Elements = try! doc.select("tr")
+                        
+                        for tr in trs {
                             
-                            let divs: Elements = try! list.select("div")
-                            
-                            for div in divs {
+                            if try! tr.className() == "even"{
                                 
+                                let session = MovieSession()
                                 
-                                if try div.className() == "center_info"{
-                                    //Get on show movie name
-                                    let h3: Elements = try! div.select("h3")
-                                    if try h3.text() == self.movieName{
-                                        //print("h3 == moviename")
-                                        let options: Elements = try! div.select("option")
-                                        
-                                        //print("handleUA: \(Thread.current)")
-                                        try! self.realm.write {
-                                            self.realm.deleteAll()
-                                        }
-                                        
-                                        
-                                        for option in options {
-                                            //print(try option.val())
-                                            
-                                            let sessionFeed = SessionFeed()
-                                            
-                                            let sessionStr: String = try option.text()
-                                            if sessionStr != "---------------------------------------------------------"{
-                                                
-                                                let sessionStrArr1 = sessionStr.components(separatedBy: ", ")
-                                                
-                                                sessionFeed.sessionID = try option.val()
-                                                sessionFeed.movieName = self.movieName
-                                                
-                                                //get dayofWeek
-                                                sessionFeed.movieOnShowDay = sessionStrArr1[0]
-                                                print(sessionStrArr1[0])
-                                                //get date
-                                                sessionFeed.movieDate = sessionStrArr1[1]
-                                                print(sessionStrArr1[1])
-                                                //get second long string
-                                                
-                                                var sessionStrArr2 = sessionStrArr1[2].components(separatedBy: " ")
-                                                //get time
-                                                sessionFeed.movieTime = "\(sessionStrArr2[0]) \(sessionStrArr2[1])"
-                                                print("\(sessionStrArr2[0]) \(sessionStrArr2[1])")
-                                                //get House name
-                                                if sessionStrArr2[3] != "HKD"{
-                                                    sessionFeed.movieOnShowHouse = "\(sessionStrArr2[2]) \(sessionStrArr2[3])"
-                                                }else{
-                                                    sessionFeed.movieOnShowHouse = "\(sessionStrArr2[2])"
-                                                }
-                                                print("\(sessionStrArr2[2]) \(sessionStrArr2[3])")
-                                                //get adult price
-                                                sessionFeed.movieAdultPrice = Int(sessionStrArr2[5]) ?? 0
-                                                print(sessionStrArr2[5])
-                                                //get format
-                                                sessionStrArr2[6] = sessionStrArr2[6].replacingOccurrences(of: "(", with: "")
-                                                sessionStrArr2[6] = sessionStrArr2[6].replacingOccurrences(of: ")", with: "")
-                                                sessionFeed.movieFormat = sessionStrArr2[6]
-                                                print(sessionStrArr2[6])
-                                                
-                                            }else{
-                                                continue
-                                            }
-                                            
-                                            try! self.realm.write {
-                                                self.realm.add(sessionFeed)
-                                            }
-                                            
-                                        }
-                                        
-                                        self.realmResults = self.realm.objects(SessionFeed.self)
-                                        self.tableView.reloadData()
-                                        
+                                let tds: Elements = try! tr.select("td")
+                                session.houseName = try! tds.first()!.text()
+                                for td in tds {
+                                    if try! td.className() == "price"{
+                                        session.price = try! td.text()
                                     }
-                                    
                                 }
+                                
+                                let acronym: Element = try! tr.select("acronym").first()!
+                                session.onShowDate = try! acronym.attr("title")
+                                session.onShowTime = try! acronym.text()
+                                
+                                let a: Element = try! tr.select("a").last()!
+                                session.purchaseURL = try! a.attr("href")
+                                
+                                self.sessions.append(session)
+                                print(self.sessions[self.sessions.count-1].houseName)
+                                
                             }
+                            
+                            
                         }
+                        
+                        DispatchQueue.main.async {
+                            
+                            if self.sessions.count == 0{
+                                let title = self.tableView.viewWithTag(100) as? UILabel
+                                title!.text = "今天已經上映完畢"
+                                
+                                let subtitle = self.tableView.viewWithTag(101) as? UILabel
+                                subtitle!.text = "請查看明天或打後的時間"
+                                
+                                let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0))
+                                cell?.isUserInteractionEnabled = false
+                            }
+                            
+                            self.tableView.reloadData()
+                            
+                            
+                            
+                        }
+                        
+                        
+                        
+                    }catch Exception.Error(type: let type, Message: let message){
+                        print(type)
+                        print(message)
+                    }catch{
+                        print("")
                     }
                     
-                    //self.dispatchGroup.leave()
-                    
-                }catch Exception.Error(type: let type, Message: let message){
-                    print(type)
-                    print(message)
-                }catch{
-                    print("")
-                    
-                    }}
+                }
                 
             }
             
+            task.resume()
+            
         }
-        task.resume()
+        
+        getTrailerURL()
         
     }
     

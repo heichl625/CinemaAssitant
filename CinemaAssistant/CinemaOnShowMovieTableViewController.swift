@@ -12,13 +12,28 @@ import SwiftyJSON
 import WebKit
 import SwiftSoup
 
+class onShowMovie {
+    
+    var movieName: String?
+    var movieImgURL: String?
+    var id: String?
+    
+}
+
 class CinemaOnShowMovieTableViewController: UITableViewController {
     
     var MCLcinemaID: String?
     var UACinemaID: String?
+    var wmoovID: String?
     var cinemaGroup: String?
-    var uaOnShowMovieCount: Int = 0
+    var firebaseCinemaID: Int?
+    
+    var dataFetchingDate: String?
+    
     var uaOnShowMovieName: [String] = []
+    
+    var movies: [onShowMovie] = []
+    
     var uaOnShowMovieThumbnailURL: [String] = []
     var jsonResult: JSON?
     
@@ -27,41 +42,18 @@ class CinemaOnShowMovieTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        switch(cinemaGroup){
-        case "MCL":
-            if let cinemaID = MCLcinemaID{
-                
-                Alamofire.request("https://www.mclcinema.com/MCLOpenAPI/en-US/NowShowing/app/Cinema/\(cinemaID)").validate().responseJSON { response in
-                    
-                    self.jsonResult = JSON(response.result.value)
-                    self.tableView.reloadData()
-                    //print(self.jsonResult![0]["MovieName"])
-                    
-                }
-                
-            }
-        case "UA":
-            //print(UACinemaID)
-            if let cinemaID = UACinemaID{
-                
-                handleUA(cinemaID: cinemaID)
-                //print(uaOnShowMovieName?.count)
-            }
-        default:
-            break
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        if let cinemaID = wmoovID{
+            handleCinema(cinemaID: cinemaID)
         }
-        
-        dispatchGroup.notify(queue: .main){
-            self.tableView.reloadData()
-        }
-        
-        
     }
     
     // MARK: - Table view data source
@@ -74,60 +66,63 @@ class CinemaOnShowMovieTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
-        switch(cinemaGroup){
-            
-        case "MCL":
-            return jsonResult?.count ?? 0
-        case "UA":
-            //print(uaOnShowMovieName)
-            return uaOnShowMovieName.count
-        default:
-            return 0
-            
+        if movies.count == 0{
+            return 1
+        }else{
+            return movies.count
         }
         
-        
     }
+    
+    
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath)
         
-        // Configure the cell...
-        if let movieTitle = cell.viewWithTag(100) as? UILabel {
+        if movies.count != 0{
             
-            switch (self.cinemaGroup){
-            case "MCL":
-                print(jsonResult![indexPath.row]["MovieName"].stringValue)
-                movieTitle.text = jsonResult![indexPath.row]["MovieName"].stringValue
-            case "UA":
-                movieTitle.text = uaOnShowMovieName[indexPath.row]
-            default:
-                break
+            // Configure the cell...
+            if let movieTitle = cell.viewWithTag(100) as? UILabel {
+                
+                
+                movieTitle.text = movies[indexPath.row].movieName
+                
                 
             }
-            
-        }
-        if let movieThumbnail = cell.viewWithTag(101) as? UIImageView {
-            
-            var url = ""
-            switch(self.cinemaGroup){
+            if let movieThumbnail = cell.viewWithTag(101) as? UIImageView {
                 
-            case "MCL":
-                url = "https://www.mclcinema.com/\(self.jsonResult![indexPath.row]["Poster"].stringValue)"
-            case "UA":
-                url = uaOnShowMovieThumbnailURL[indexPath.row]
-            default:
-                break
-            }
-            
-            Alamofire.request(url).responseData { response in
+                var url = ""
                 
-                if let data = response.result.value{
+                
+                if movies.count > 0 && movies[indexPath.row].movieImgURL != nil{
                     
-                    movieThumbnail.image = UIImage(data: data, scale: 1)
-                    
+                    url = movies[indexPath.row].movieImgURL!
+                    print("row: \(indexPath.row)")
                 }
+                
+                DispatchQueue.global(qos: .background).async {
+                    AF.request(url).responseData { response in
+                        
+                        switch(response.result){
+                            
+                        case let .success(value):
+                            
+                            DispatchQueue.main.async {
+                                movieThumbnail.image = UIImage(data: value, scale: 1)
+                            }
+                            
+                        case let .failure(error):
+                            print("error")
+                        }
+                    }
+                }
+            }
+        }else{
+            
+            if let movieTitle = cell.viewWithTag(100) as? UILabel{
+                
+                movieTitle.text = "此戲院現時未有任何電影正在上映"
                 
             }
             
@@ -148,19 +143,13 @@ class CinemaOnShowMovieTableViewController: UITableViewController {
             if let destinationVC = segue.destination as? SessionTableViewController {
                 
                 destinationVC.cinemaGroup = self.cinemaGroup
+                destinationVC.firebaseCinemaID = self.firebaseCinemaID
                 
-                switch(self.cinemaGroup){
                 
-                case "MCL":
-                    destinationVC.cinemaID = self.MCLcinemaID
-                    destinationVC.movieID = self.jsonResult![tableView.indexPathForSelectedRow!.row]["MovieSetID"].stringValue
-                case "UA":
-                    destinationVC.cinemaID = self.UACinemaID
-                    destinationVC.movieName = self.uaOnShowMovieName[tableView.indexPathForSelectedRow!.row]
-                default:
-                    break
-                    
-                }
+                destinationVC.cinemaID = self.wmoovID
+                destinationVC.dataFetchingDate = self.dataFetchingDate
+                destinationVC.movieID = self.movies[tableView.indexPathForSelectedRow!.row].id
+                destinationVC.movieName = self.movies[tableView.indexPathForSelectedRow!.row].movieName
                 
             }
             
@@ -168,13 +157,94 @@ class CinemaOnShowMovieTableViewController: UITableViewController {
         
     }
     
-    func handleUA(cinemaID: String){
+    //    func handleUA(cinemaID: String){
+    //
+    //        dispatchGroup.enter()
+    //
+    //        print(cinemaID)
+    //
+    //        let url = URL(string: "https://www.uacinemas.com.hk/eng/cinema/\(cinemaID)")
+    //
+    //        DispatchQueue.global(qos: .background).async{
+    //
+    //            let task = URLSession.shared.dataTask(with: url!){ (data, response, error) in
+    //
+    //                if error != nil {
+    //                    print(error)
+    //                }else{
+    //
+    //                    do {
+    //
+    //                        let html = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+    //
+    //                        let doc: Document = try SwiftSoup.parse(html! as String)
+    //
+    //                        let lists: Elements = try! doc.select("li")
+    //
+    //                        for list in lists{
+    //                            //get movie poster
+    //                            if try list.className() == "desktop"{
+    //
+    //                                let divs: Elements = try! list.select("div")
+    //
+    //                                for div in divs {
+    //
+    //                                    if try div.className() == "center_img"{
+    //                                        let img: Elements = try! div.select("img")
+    //                                        //print(try img.attr("src"))
+    //                                        self.uaOnShowMovieThumbnailURL.append(try! img.attr("src"))
+    //                                    }
+    //
+    //
+    //                                    if try div.className() == "center_info"{
+    //                                        //Get on show movie name
+    //                                        let h3: Elements = try! div.select("h3")
+    //                                        if h3.isEmpty(){
+    //                                            continue
+    //                                        }else{
+    //                                            //print(try h3.text())
+    //                                            self.uaOnShowMovieName.append(try! h3.text())
+    //
+    //                                        }
+    //
+    //                                    }
+    //                                }
+    //                            }
+    //                        }
+    //
+    //
+    //                        print(self.uaOnShowMovieName)
+    //                        self.dispatchGroup.leave()
+    //
+    //
+    //
+    //                    }catch Exception.Error(type: let type, Message: let message){
+    //                        print(type)
+    //                        print(message)
+    //                    }catch{
+    //                        print("")
+    //
+    //                    }
+    //
+    //                }
+    //
+    //            }
+    //            task.resume()
+    //        }
+    //
+    //    }
+    //
+    func handleCinema(cinemaID: String){
         
-        dispatchGroup.enter()
+        movies.removeAll()
         
         print(cinemaID)
         
-        let url = URL(string: "https://www.uacinemas.com.hk/eng/cinema/\(cinemaID)")
+        let group = DispatchGroup()
+        
+        let url = URL(string: "https://wmoov.com/cinema/movies/\(cinemaID)")
+        
+        
         
         let task = URLSession.shared.dataTask(with: url!){ (data, response, error) in
             
@@ -188,61 +258,141 @@ class CinemaOnShowMovieTableViewController: UITableViewController {
                     
                     let doc: Document = try SwiftSoup.parse(html! as String)
                     
-                    let lists: Elements = try! doc.select("li")
+                    let options: Elements = try! doc.select("option")
                     
-                    for list in lists{
-                        //get movie poster
-                        if try list.className() == "desktop"{
+                    for option in options {
+                        
+                        if try! option.attr("selected") == "selected"{
                             
-                            let divs: Elements = try! list.select("div")
+                            self.dataFetchingDate = try! option.attr("value")
+                            break
                             
-                            for div in divs {
-                            
-                                if try div.className() == "center_img"{
-                                    let img: Elements = try! div.select("img")
-                                    //print(try img.attr("src"))
-                                    self.uaOnShowMovieThumbnailURL.append(try! img.attr("src"))
-                                }
-                                
-                                
-                                if try div.className() == "center_info"{
-                                    //Get on show movie name
-                                    let h3: Elements = try! div.select("h3")
-                                    if h3.isEmpty(){
-                                        continue
-                                    }else{
-                                        //print(try h3.text())
-                                        self.uaOnShowMovieName.append(try! h3.text())
-                                        self.uaOnShowMovieCount+=1
-                                        
-                                    }
-                                    
-                                }
-                            }
                         }
                     }
+                    let selects: Elements = try! doc.select("select")
                     
-                    
-                    print(self.uaOnShowMovieName)
-                    self.dispatchGroup.leave()
-                    
-                    
-                    
+                    for select in selects{
+                        
+                        if select.id() == "movies_option"{
+                            
+                            let movieNames: Elements = try select.select("option")
+                            
+                            group.enter()
+                            print("entered")
+                            
+                            for movieName in movieNames{
+                                if try! movieName.attr("value") != "" {
+                                    
+                                    let newMovie = onShowMovie()
+                                    
+                                    newMovie.movieName = try! movieName.text()
+                                    
+                                    newMovie.id = try! movieName.attr("value")
+                                    
+                                    let movieURL = URL(string: "https://wmoov.com/movie/details/\(newMovie.id!)")
+                                    let imgTask = URLSession.shared.dataTask(with: movieURL!){ (data, response, error) in
+                                        if error != nil {
+                                            print(error)
+                                        }else{
+                                            do {
+                                                let html = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+                                                
+                                                let doc: Document = try SwiftSoup.parse(html! as String)
+                                                
+                                                let img: Element = try! doc.select("img").first()!
+                                                
+                                                newMovie.movieImgURL = "https:\(try! img.attr("src"))"
+                                                
+                                                self.movies.append(newMovie)
+                                                
+                                                print("\(newMovie.id) add!")
+                                                
+                                                if movieName == movieNames.last(){
+                                                    group.leave()
+                                                    print("left")
+                                                }
+                                                group.notify(queue: .main){
+                                                    print("All movie added to class")
+                                                    DispatchQueue.main.async{
+                                                        self.tableView.reloadData()
+                                                    }
+                                                }
+                                                
+                                            }catch Exception.Error(type: let type, Message: let message){
+                                                print(type)
+                                                print(message)
+                                            }catch{
+                                                print("")
+                                            }
+                                            
+                                        }
+                                    }
+                                    imgTask.resume()
+                                }
+                                //group.leave()
+                            }
+                            
+                        }
+                        
+                    }
                 }catch Exception.Error(type: let type, Message: let message){
                     print(type)
                     print(message)
                 }catch{
                     print("")
-                    
                 }
-                
             }
-            
         }
         task.resume()
-        
     }
     
+    
+    //        group.notify(queue: .main){
+    //
+    //            print("Finished loading names")
+    //
+    //            let dg = DispatchGroup()
+    //
+    //                for n in 0..<self.movies.count{
+    //
+    //                    dg.enter()
+    
+    //                    let movieURL = URL(string: "https://wmoov.com/movie/details/\(self.movies[n].id!)")
+    //                    let imgTask = URLSession.shared.dataTask(with: movieURL!){ (data, response, error) in
+    //                        if error != nil {
+    //                            print(error)
+    //                        }else{
+    //                            do {
+    //                                let html = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+    //
+    //                                let doc: Document = try SwiftSoup.parse(html! as String)
+    //
+    //                                let img: Element = try! doc.select("img").first()!
+    //
+    //                                self.movies[n].movieImgURL = "https:\(try! img.attr("src"))"
+    //
+    //                                dg.leave()
+    //
+    //                            }catch Exception.Error(type: let type, Message: let message){
+    //                                print(type)
+    //                                print(message)
+    //                            }catch{
+    //                                print("")
+    //                            }
+    //                        }
+    //                    }
+    //                    imgTask.resume()
+    
+    //            }
+    
+    //            dg.notify(queue: .main){
+    //                DispatchQueue.main.async {
+    //                    self.tableView.reloadData()
+    //                }
+    //            }
+    //
+    //        }
+    //    }
     
     /*
      // Override to support conditional editing of the table view.

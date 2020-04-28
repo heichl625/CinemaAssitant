@@ -22,10 +22,13 @@ class CinemaDetailTableViewController: UITableViewController {
     var cinemaGroup: String?
     var MCLCinemaID: String?
     var UACinemaID: String?
+    var wmoovID: String?
     var cinemaID: Int = 0
     var houseNum = 0
     var onShowMovieName: [String]?
     var onShowMoviethumbnailURL: [String]?
+    var lat: Double = 0.0
+    var lon: Double = 0.0
     
     var districtCName: String = ""
     var ref: DatabaseReference!
@@ -43,29 +46,17 @@ class CinemaDetailTableViewController: UITableViewController {
         ref = Database.database().reference()
         navigationItem.title = cinemaName
         
-        if cinemaGroup == "MCL" {
-            
-            ref.child("cinema").child("\(cinemaID)").observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                let value = snapshot.value as? NSDictionary
-                
-                self.MCLCinemaID = value?["MCLCinemaID"] as? String ?? ""
-                
-                
-            })
-        }
+        print(lat, lon)
         
-        if cinemaGroup == "UA"{
+        ref.child("cinema").child("\(cinemaID)").observeSingleEvent(of: .value, with: { (snapshot) in
             
-            ref.child("cinema").child("\(cinemaID)").observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                let value = snapshot.value as? NSDictionary
-                
-                self.UACinemaID = value?["UACinemaID"] as? String ?? ""
-                
-            })
+            let value = snapshot.value as? NSDictionary
             
-        }
+            self.wmoovID = value?["wmoovID"] as? String ?? ""
+            
+            print(self.wmoovID)
+            
+        })
         
         
         
@@ -124,11 +115,10 @@ class CinemaDetailTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.cellForRow(at: indexPath)?.isSelected = false
-        
         if indexPath.row == 3 {
-            makeCall()
+            UIApplication.shared.open(URL(string: "tel://\(tel!)")!)
         }
+        tableView.cellForRow(at: indexPath)?.isSelected = false
         
     }
     @IBAction func nowShowingBtnPressed(_ sender: UIBarButtonItem) {
@@ -137,21 +127,6 @@ class CinemaDetailTableViewController: UITableViewController {
         
         
         self.performSegue(withIdentifier: "showOnShowMovieFromCinemaDetail", sender: self)
-    }
-    
-    func makeCall(){
-        
-        if let phoneURL = URL(string: ("tel://" + tel!)) {
-            let alert = UIAlertController(title: ("Call " + tel! + "?"), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Call", style: .default, handler: { (action) in
-                UIApplication.shared.open(phoneURL)
-            }))
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -174,6 +149,8 @@ class CinemaDetailTableViewController: UITableViewController {
                 
                 destinationVC.address = self.address!
                 destinationVC.cinemaName = self.cinemaName!
+                destinationVC.lat = self.lat
+                destinationVC.lon = self.lon
                 
             }
             
@@ -184,19 +161,8 @@ class CinemaDetailTableViewController: UITableViewController {
             if let destinationVC = segue.destination as? CinemaOnShowMovieTableViewController {
                 
                 destinationVC.cinemaGroup = self.cinemaGroup
-                
-                switch(cinemaGroup){
-                    
-                case "MCL":
-                    destinationVC.MCLcinemaID = self.MCLCinemaID
-                case "UA":
-                    destinationVC.UACinemaID = self.UACinemaID
-                default:
-                    break
-                }
-                
-                
-                
+                destinationVC.firebaseCinemaID = self.cinemaID
+                destinationVC.wmoovID = self.wmoovID
                 
             }
             
